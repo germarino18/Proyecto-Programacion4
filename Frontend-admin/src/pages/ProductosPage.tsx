@@ -6,7 +6,7 @@ import { getCategorias } from '../api/categorias';
 import { getIngredientes } from '../api/ingredientes';
 import { getUnidadesMedida } from '../api/unidadesMedida';
 import Modal from '../components/Modal';
-import type { Producto, ProductoCreate, ProductoUpdate, Ingrediente, UnidadMedida } from '../types';
+import type { Producto, ProductoCreate, ProductoUpdate } from '../types';
 
 export default function ProductosPage() {
   const queryClient = useQueryClient();

@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, Query, status
 from sqlmodel import Session
 from app.database import get_session
 from app.core.uow import UnitOfWork
+from app.core.dependencies import require_role
 from app.schemas.ingrediente import IngredienteCreate, IngredienteRead, IngredienteUpdate
 from app.services.ingrediente_service import IngredienteService
 
@@ -32,6 +33,7 @@ def obtener_ingrediente(id: int, service: IngredienteService = Depends(get_servi
 def crear_ingrediente(
     data: IngredienteCreate,
     service: IngredienteService = Depends(get_service),
+    _=Depends(require_role(["ADMIN"])),
 ):
     return service.create(data)
 
@@ -41,10 +43,12 @@ def actualizar_ingrediente(
     id: int,
     data: IngredienteUpdate,
     service: IngredienteService = Depends(get_service),
+    _=Depends(require_role(["ADMIN"])),
 ):
     return service.update(id, data)
 
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def eliminar_ingrediente(id: int, service: IngredienteService = Depends(get_service)):
+def eliminar_ingrediente(id: int, service: IngredienteService = Depends(get_service),
+    _=Depends(require_role(["ADMIN"])),):
     service.delete(id)

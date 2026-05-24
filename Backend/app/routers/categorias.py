@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, Query, status
 from sqlmodel import Session
 from app.database import get_session
 from app.core.uow import UnitOfWork
+from app.core.dependencies import require_role
 from app.schemas.categoria import CategoriaCreate, CategoriaRead, CategoriaUpdate
 from app.services.categoria_service import CategoriaService
 
@@ -32,6 +33,7 @@ def obtener_categoria(id: int, service: CategoriaService = Depends(get_service))
 def crear_categoria(
     data: CategoriaCreate,
     service: CategoriaService = Depends(get_service),
+    _=Depends(require_role(["ADMIN"])),
 ):
     return service.create(data)
 
@@ -41,10 +43,12 @@ def actualizar_categoria(
     id: int,
     data: CategoriaUpdate,
     service: CategoriaService = Depends(get_service),
+    _=Depends(require_role(["ADMIN"])),
 ):
     return service.update(id, data)
 
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def eliminar_categoria(id: int, service: CategoriaService = Depends(get_service)):
+def eliminar_categoria(id: int, service: CategoriaService = Depends(get_service),
+    _=Depends(require_role(["ADMIN"])),):
     service.delete(id)

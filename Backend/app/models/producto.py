@@ -7,6 +7,7 @@ if TYPE_CHECKING:
     from app.models.unidad_medida import UnidadMedida
     from app.models.producto_categoria import ProductoCategoria
     from app.models.producto_ingrediente import ProductoIngrediente
+    from app.models.detalle_pedido import DetallePedido
 
 
 class Producto(SQLModel, table=True):
@@ -51,5 +52,8 @@ class Producto(SQLModel, table=True):
         back_populates="producto"
     )
     productos_ingredientes: List["ProductoIngrediente"] = Relationship(
+        back_populates="producto"
+    )
+    detalles_pedido: List["DetallePedido"] = Relationship(
         back_populates="producto"
     )

@@ -7,12 +7,17 @@ from app.routers.unidades_medida import router as unidades_medida_router
 from app.routers.categorias import router as categorias_router
 from app.routers.productos import router as productos_router
 from app.routers.ingredientes import router as ingredientes_router
+from app.routers.auth import router as auth_router
+from app.routers.pedidos import router as pedidos_router
+from app.routers.direcciones import router as direcciones_router
+from app.routers.admin import router as admin_router
+from app.routers.formas_pago import router as formas_pago_router
 
 app = FastAPI(title="Catálogo de Productos - API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["http://localhost:5173", "http://localhost:5174"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -22,6 +27,11 @@ app.include_router(unidades_medida_router)
 app.include_router(categorias_router)
 app.include_router(productos_router)
 app.include_router(ingredientes_router)
+app.include_router(auth_router)
+app.include_router(pedidos_router)
+app.include_router(direcciones_router)
+app.include_router(admin_router)
+app.include_router(formas_pago_router)
 
 
 @app.on_event("startup")
