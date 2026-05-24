@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ROST Admin - Gestión de Ingredientes</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&amp;family=Manrope:wght@400;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#79593a",
+                    "on-background": "#221a0f",
+                    "outline": "#74777e",
+                    "surface-container-highest": "#efe0cd",
+                    "surface": "#fff8f3",
+                    "tertiary-fixed-dim": "#e8bf99",
+                    "surface-container": "#fbecd9",
+                    "error-container": "#ffdad6",
+                    "surface-variant": "#efe0cd",
+                    "on-tertiary-fixed-variant": "#5d4124",
+                    "surface-container-low": "#fff2e2",
+                    "error": "#ba1a1a",
+                    "secondary-container": "#f1e0ce",
+                    "on-primary": "#ffffff",
+                    "on-surface": "#221a0f",
+                    "tertiary-fixed": "#ffdcbe",
+                    "inverse-surface": "#372f22",
+                    "on-primary-fixed": "#051c38",
+                    "primary-container": "#4d6080",
+                    "on-error": "#ffffff",
+                    "on-primary-container": "#c8dbff",
+                    "primary-fixed-dim": "#b4c7ec",
+                    "surface-container-high": "#f5e6d3",
+                    "on-secondary-container": "#6f6254",
+                    "on-tertiary-container": "#fdd2ab",
+                    "on-error-container": "#93000a",
+                    "secondary": "#695c4e",
+                    "on-secondary-fixed-variant": "#504538",
+                    "primary-fixed": "#d5e3ff",
+                    "on-tertiary-fixed": "#2c1601",
+                    "inverse-primary": "#b4c7ec",
+                    "secondary-fixed-dim": "#d4c4b3",
+                    "on-primary-fixed-variant": "#344766",
+                    "surface-tint": "#4c5f7f",
+                    "on-secondary": "#ffffff",
+                    "primary": "#354867",
+                    "surface-dim": "#e6d8c5",
+                    "on-tertiary": "#ffffff",
+                    "background": "#fff8f3",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary": "#5f4225",
+                    "on-secondary-fixed": "#231a0f",
+                    "outline-variant": "#c4c6ce",
+                    "secondary-fixed": "#f1e0ce",
+                    "surface-bright": "#fff8f3",
+                    "inverse-on-surface": "#feefdb",
+                    "on-surface-variant": "#44474d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "unit": "8px",
+                    "container-max": "1280px",
+                    "gutter": "24px",
+                    "margin-desktop": "48px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Bricolage Grotesque"],
+                    "body-md": ["Manrope"],
+                    "headline-md": ["Bricolage Grotesque"],
+                    "headline-lg-mobile": ["Bricolage Grotesque"],
+                    "display-lg": ["Bricolage Grotesque"],
+                    "label-md": ["Manrope"],
+                    "body-lg": ["Manrope"]
+            },
+            "fontSize": {
+                    "headline-lg": ["40px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-md": ["28px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #fff8f3;
+        }
+        /* Custom scrollbar for premium feel */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d4c4b3;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen font-body-md text-on-surface">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 bg-surface-container dark:bg-on-background border-r border-outline-variant/20 py-unit space-y-2 z-50">
+<!-- Brand Header -->
+<div class="px-6 py-8 mb-4">
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">ROST Admin</h1>
+<p class="font-label-md text-label-md text-on-surface-variant opacity-70">Specialty Coffee Management</p>
+</div>
+<!-- Navigation Links -->
+<nav class="flex-grow flex flex-col space-y-1">
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label-md text-label-md">Orders</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">coffee</span>
+<span class="font-label-md text-label-md">Products</span>
+</a>
+<a class="flex items-center gap-3 bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-lg px-4 py-3 mx-2 translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined">liquor</span>
+<span class="font-label-md text-label-md">Ingredients</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">category</span>
+<span class="font-label-md text-label-md">Categories</span>
+</a>
+</nav>
+<!-- CTA & Footer -->
+<div class="px-4 py-4 space-y-1">
+<button class="w-full mb-6 bg-primary text-on-primary font-label-md py-3 rounded-lg shadow-sm hover:opacity-90 transition-opacity">
+                New Product
+            </button>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-surface-variant px-4 py-3 hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-surface-variant px-4 py-3 hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md text-label-md">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-grow md:ml-64 p-margin-mobile md:p-margin-desktop bg-surface">
+<!-- Header Section -->
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-gutter mb-12">
+<div class="space-y-2">
+<h2 class="font-headline-lg text-headline-lg text-primary">Gestión de Ingredientes</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Control de existencias y suministros de cafetería.</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-high border-none rounded-lg focus:ring-2 focus:ring-primary w-full md:w-64 font-body-md text-on-surface" placeholder="Buscar ingrediente..." type="text"/>
+</div>
+<button class="flex items-center gap-2 bg-primary text-on-primary px-6 py-2.5 rounded-lg font-label-md shadow-sm hover:shadow-md transition-shadow">
+<span class="material-symbols-outlined">add</span>
+                    Nuevo Ingrediente
+                </button>
+</div>
+</header>
+<!-- Stats Overview (Asymmetric Layout) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-12">
+<div class="bg-primary-container text-on-primary-container p-6 rounded-xl flex flex-col justify-between h-32">
+<span class="font-label-md opacity-80 uppercase tracking-wider">Total Ingredientes</span>
+<span class="font-display-lg text-headline-lg">42</span>
+</div>
+<div class="bg-surface-container-high p-6 rounded-xl flex flex-col justify-between h-32 border border-outline-variant/10">
+<span class="font-label-md text-on-surface-variant uppercase tracking-wider">Stock Bajo</span>
+<div class="flex items-center gap-3">
+<span class="font-display-lg text-headline-lg text-error">08</span>
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">error</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl flex flex-col justify-between h-32 border border-outline-variant/10">
+<span class="font-label-md text-on-surface-variant uppercase tracking-wider">Próximo Pedido</span>
+<span class="font-headline-md text-primary">Martes, 12</span>
+</div>
+</div>
+<!-- Ingredients Table Container -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden border border-outline-variant/10">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high">
+<th class="px-6 py-4 font-label-md text-primary uppercase tracking-wider">Nombre del Ingrediente</th>
+<th class="px-6 py-4 font-label-md text-primary uppercase tracking-wider">Stock Disponible</th>
+<th class="px-6 py-4 font-label-md text-primary uppercase tracking-wider">Unidad</th>
+<th class="px-6 py-4 font-label-md text-primary uppercase tracking-wider">Estado</th>
+<th class="px-6 py-4 font-label-md text-primary uppercase tracking-wider text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Row 1: Low Stock -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">coffee</span>
+</div>
+<div>
+<p class="font-label-md text-on-surface">Espresso Blend (House)</p>
+<p class="text-xs text-on-surface-variant">Origen: Colombia/Brasil</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="font-headline-md text-error">2.4</span>
+</td>
+<td class="px-6 py-5 font-body-md text-on-surface-variant">kg</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-error-container text-on-error-container font-label-md text-[12px]">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                    Stock Bajo
+                                </span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-primary hover:bg-primary/10 px-4 py-2 rounded-lg font-label-md transition-colors">
+                                    Editar Stock
+                                </button>
+</td>
+</tr>
+<!-- Row 2: Healthy Stock -->
+<tr class="bg-primary/5 hover:bg-primary/10 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">water_drop</span>
+</div>
+<div>
+<p class="font-label-md text-on-surface">Leche Entera Premium</p>
+<p class="text-xs text-on-surface-variant">Proveedor: Local Dairy</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="font-headline-md text-primary">48</span>
+</td>
+<td class="px-6 py-5 font-body-md text-on-surface-variant">un (litros)</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-variant text-on-surface-variant font-label-md text-[12px]">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+                                    Suficiente
+                                </span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-primary hover:bg-primary/10 px-4 py-2 rounded-lg font-label-md transition-colors">
+                                    Editar Stock
+                                </button>
+</td>
+</tr>
+<!-- Row 3: Critical Stock -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">icecream</span>
+</div>
+<div>
+<p class="font-label-md text-on-surface">Jarabe de Vainilla</p>
+<p class="text-xs text-on-surface-variant">Artesanal</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="font-headline-md text-error">450</span>
+</td>
+<td class="px-6 py-5 font-body-md text-on-surface-variant">ml</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-error-container text-on-error-container font-label-md text-[12px]">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                    Crítico
+                                </span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-primary hover:bg-primary/10 px-4 py-2 rounded-lg font-label-md transition-colors">
+                                    Editar Stock
+                                </button>
+</td>
+</tr>
+<!-- Row 4: Healthy Stock -->
+<tr class="bg-primary/5 hover:bg-primary/10 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">bakery_dining</span>
+</div>
+<div>
+<p class="font-label-md text-on-surface">Azúcar Orgánica</p>
+<p class="text-xs text-on-surface-variant">Bolsas de 5kg</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="font-headline-md text-primary">15</span>
+</td>
+<td class="px-6 py-5 font-body-md text-on-surface-variant">kg</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-variant text-on-surface-variant font-label-md text-[12px]">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+                                    Suficiente
+                                </span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-primary hover:bg-primary/10 px-4 py-2 rounded-lg font-label-md transition-colors">
+                                    Editar Stock
+                                </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination-like Footer -->
+<div class="px-6 py-4 border-t border-outline-variant/10 flex items-center justify-between">
+<p class="font-label-md text-on-surface-variant">Mostrando 4 de 42 ingredientes</p>
+<div class="flex gap-2">
+<button class="p-2 rounded-lg border border-outline-variant/20 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">chevron_left</span>
+</button>
+<button class="p-2 rounded-lg border border-outline-variant/20 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Promotional/Action Card -->
+<section class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<div class="relative h-64 rounded-2xl overflow-hidden group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A professional high-end photograph of organic raw coffee beans scattered on a rustic wooden surface with warm, cinematic lighting. The color palette emphasizes rich browns and deep Slate Blue tones, reflecting a premium specialty coffee brand aesthetic. The focus is sharp on the beans in the foreground with a soft ambient blur in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAa_RL2vQxugxv4BUlCBiE60ztBaDne0zv4NwkXPd3NqtgLeP-sEIUYaL2IPH06dQypq-Dw5_dLkzm7njq-m1EDy6_8XBzKg7pMoIbtw_qcER7PRoxRs5Idt6Hv6wXYvYvo_3pFDU4DG0VyuwRR_B-iOaeEiKcf7jgAkbZxO5eiWtpPEWDgCtqh3RYnAoO_1LMPArGybExnRbx3K4kFbvH8ifCK4YOD_2uWmky_kVQWwbUkjXafIaE6WJ7fUhkZHBz-4Y0ebZvtZx9R"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-background/80 to-transparent flex flex-col justify-end p-8 text-white">
+<h3 class="font-headline-md mb-2">Pedidos Automáticos</h3>
+<p class="font-body-md opacity-80 mb-4">Configura alertas inteligentes para reponer tu inventario antes de que se agote.</p>
+<a class="text-primary-fixed underline font-label-md" href="#">Configurar Reglas</a>
+</div>
+</div>
+<div class="bg-tertiary-fixed text-on-tertiary-fixed p-8 rounded-2xl flex flex-col justify-center">
+<h3 class="font-headline-md mb-4">Reporte de Mermas</h3>
+<p class="font-body-md mb-6 opacity-90">Analiza el desperdicio semanal para optimizar tus márgenes de ganancia en cada taza de café servida.</p>
+<button class="w-fit bg-on-tertiary-fixed text-tertiary-fixed px-8 py-3 rounded-lg font-label-md hover:opacity-90 transition-opacity">
+                    Descargar Reporte (PDF)
+                </button>
+</div>
+</section>
+<!-- Footer -->
+<footer class="mt-20 w-full py-12 border-t border-outline-variant/10 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex flex-col items-center md:items-start gap-2">
+<h4 class="font-headline-md text-primary">ROST</h4>
+<p class="font-body-md text-on-surface-variant opacity-60">© 2024 ROST Specialty Coffee. Crafted with intention.</p>
+</div>
+<div class="flex gap-8">
+<a class="font-label-md text-on-secondary-container hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-label-md text-on-secondary-container hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-md text-on-secondary-container hover:text-primary transition-colors" href="#">Contact Us</a>
+</div>
+</footer>
+</main>
+<!-- Mobile Navigation Overlay (Simplified) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container border-t border-outline-variant/20 px-4 py-2 flex justify-around items-center z-50">
+<button class="p-3 text-primary"><span class="material-symbols-outlined">dashboard</span></button>
+<button class="p-3 text-on-surface-variant"><span class="material-symbols-outlined">coffee</span></button>
+<button class="p-3 text-on-surface-variant bg-primary-container text-on-primary-container rounded-full"><span class="material-symbols-outlined">liquor</span></button>
+<button class="p-3 text-on-surface-variant"><span class="material-symbols-outlined">category</span></button>
+<button class="p-3 text-on-surface-variant"><span class="material-symbols-outlined">settings</span></button>
+</nav>
+</body></html>

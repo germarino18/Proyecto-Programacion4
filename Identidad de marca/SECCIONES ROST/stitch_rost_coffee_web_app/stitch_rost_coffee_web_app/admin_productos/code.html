@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ROST Admin - Gestión de Productos</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&amp;family=Manrope:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#79593a",
+                        "on-background": "#221a0f",
+                        "outline": "#74777e",
+                        "surface-container-highest": "#efe0cd",
+                        "surface": "#fff8f3",
+                        "tertiary-fixed-dim": "#e8bf99",
+                        "surface-container": "#fbecd9",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#efe0cd",
+                        "on-tertiary-fixed-variant": "#5d4124",
+                        "surface-container-low": "#fff2e2",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#f1e0ce",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#221a0f",
+                        "tertiary-fixed": "#ffdcbe",
+                        "inverse-surface": "#372f22",
+                        "on-primary-fixed": "#051c38",
+                        "primary-container": "#4d6080",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#c8dbff",
+                        "primary-fixed-dim": "#b4c7ec",
+                        "surface-container-high": "#f5e6d3",
+                        "on-secondary-container": "#6f6254",
+                        "on-tertiary-container": "#fdd2ab",
+                        "on-error-container": "#93000a",
+                        "secondary": "#695c4e",
+                        "on-secondary-fixed-variant": "#504538",
+                        "primary-fixed": "#d5e3ff",
+                        "on-tertiary-fixed": "#2c1601",
+                        "inverse-primary": "#b4c7ec",
+                        "secondary-fixed-dim": "#d4c4b3",
+                        "on-primary-fixed-variant": "#344766",
+                        "surface-tint": "#4c5f7f",
+                        "on-secondary": "#ffffff",
+                        "primary": "#354867",
+                        "surface-dim": "#e6d8c5",
+                        "on-tertiary": "#ffffff",
+                        "background": "#fff8f3",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#5f4225",
+                        "on-secondary-fixed": "#231a0f",
+                        "outline-variant": "#c4c6ce",
+                        "secondary-fixed": "#f1e0ce",
+                        "surface-bright": "#fff8f3",
+                        "inverse-on-surface": "#feefdb",
+                        "on-surface-variant": "#44474d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "unit": "8px",
+                        "container-max": "1280px",
+                        "gutter": "24px",
+                        "margin-desktop": "48px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Bricolage Grotesque"],
+                        "body-md": ["Manrope"],
+                        "headline-md": ["Bricolage Grotesque"],
+                        "headline-lg-mobile": ["Bricolage Grotesque"],
+                        "display-lg": ["Bricolage Grotesque"],
+                        "label-md": ["Manrope"],
+                        "body-lg": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["40px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-md": ["28px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #FFEDDB;
+            color: #221a0f;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md">
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen w-64 bg-surface-container border-r border-outline-variant/20 flex flex-col py-unit space-y-2 z-50">
+<div class="px-6 py-6 mb-4">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">ROST Admin</h1>
+<p class="font-label-md text-label-md text-on-surface-variant opacity-70">Specialty Coffee Management</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-md">Orders</span>
+</a>
+<a class="flex items-center gap-3 bg-primary-container text-on-primary-container rounded-lg px-4 py-3 mx-2 translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="coffee">coffee</span>
+<span class="font-label-md">Products</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="liquor">liquor</span>
+<span class="font-label-md">Ingredients</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="category">category</span>
+<span class="font-label-md">Categories</span>
+</a>
+</nav>
+<div class="px-4 py-4">
+<button class="w-full bg-primary-container text-white font-label-md py-3 rounded-lg shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                    New Product
+                </button>
+</div>
+<div class="mt-auto border-t border-outline-variant/10 pt-4 pb-6">
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label-md">Logout</span>
+</a>
+<div class="flex items-center gap-3 px-4 py-4 mx-2 mt-2">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border border-outline-variant/30">
+<img alt="Admin Avatar" class="w-full h-full object-cover" data-alt="Close-up professional portrait of a confident coffee shop manager with a warm smile, wearing a minimalist apron in a brightly lit, modern artisanal cafe. The background features soft bokeh of espresso machines and wooden textures, reflecting a premium and clean service aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCg_Us67X0AdshLq94t9FyTnLY_Oa2gSRlgdpZN8pto_8afhd6PmBCfVRAQURaH9nIdxhLrB3cWFAwtB27nDGnCj7o-eJKEBvKfJJOBPjWVeePPPLfCmnioQOYHttBOETWhJ9m5O0d_8ws7cjxfKPxGQofN5WsYitsWqnUwWYzZ-LLMkV0gIkw5t7p_pfzDLTJw4mH_gBLleNPl_-h3jL3ouaFWOnxRef2Wf3jKCe8nRvlIHVyZzr602EmqNPsueaHqhNlsv_J7D66P"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-on-surface leading-tight">Admin User</span>
+<span class="text-[11px] text-on-surface-variant opacity-60">Manager</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 ml-64 p-margin-desktop bg-[#FFEDDB] min-h-screen">
+<header class="flex justify-between items-end mb-10">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Gestión de Productos</h2>
+<p class="font-body-lg text-body-lg text-secondary mt-1">Administra el catálogo de especialidades y repostería.</p>
+</div>
+<div class="flex gap-4">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="bg-surface-container-high border-none rounded-lg pl-10 pr-4 py-2 text-label-md focus:ring-2 focus:ring-primary w-64" placeholder="Buscar producto..." type="text"/>
+</div>
+<button class="bg-primary text-white px-6 py-2 rounded-lg font-label-md flex items-center gap-2 hover:bg-opacity-90 transition-all shadow-sm">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+                        Crear Producto
+                    </button>
+</div>
+</header>
+<!-- Product Table Section -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden border border-outline-variant/10">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50 border-b border-outline-variant/20">
+<th class="px-6 py-4 font-label-md text-primary uppercase tracking-wider">Imagen</th>
+<th class="px-6 py-4 font-label-md text-primary uppercase tracking-wider">Nombre</th>
+<th class="px-6 py-4 font-label-md text-primary uppercase tracking-wider">Precio</th>
+<th class="px-6 py-4 font-label-md text-primary uppercase tracking-wider">Categoría</th>
+<th class="px-6 py-4 font-label-md text-primary uppercase tracking-wider">Stock</th>
+<th class="px-6 py-4 font-label-md text-primary uppercase tracking-wider text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Row 1 -->
+<tr class="hover:bg-primary-container/5 transition-colors">
+<td class="px-6 py-4">
+<div class="w-16 h-16 rounded-lg overflow-hidden border border-outline-variant/20">
+<img alt="Latte Art" class="w-full h-full object-cover" data-alt="Top-down shot of a ceramic cup featuring exquisite latte art with a perfect heart pattern in creamy foam. The coffee has a rich hazelnut brown hue, placed on a minimalist wooden surface with warm, natural sunlight creating soft shadows, evoking a premium artisanal coffee experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRlORRV3lpatxhkGRb_kttUtBkv9EbZoOedj1v_ZhupxNStqEQZoZ90Aqu1PqVQXQC5nPw2C69Bym168r0DezZ36I4W1AYQ9QbAll51U631T0XHUtQQD2-7flcjXLwZ8ZA9LCOYduNbGn5ZXMF7qlz0fjPFqWV-Neu0L2NYaDcq68v5orXF-9pTP-oWRWP1JRvsn9go92kztSZN77SpOh1usVAMOEwqknmYD0_OOCkiQTPENGHWtmXFMG1SdOsodTXkg-LAyNtbPH2"/>
+</div>
+</td>
+<td class="px-6 py-4 font-label-md text-on-surface">Flat White Especial</td>
+<td class="px-6 py-4 font-body-md text-secondary">€4.20</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-[12px] font-label-md uppercase tracking-tight">Café</span>
+</td>
+<td class="px-6 py-4 font-body-md text-on-surface-variant">85 u.</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 text-primary hover:bg-primary-container/20 rounded-lg transition-all" title="Editar">
+<span class="material-symbols-outlined" data-icon="edit_square">edit_square</span>
+</button>
+<button class="p-2 text-error hover:bg-error-container/20 rounded-lg transition-all" title="Eliminar">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-primary-container/5 transition-colors">
+<td class="px-6 py-4">
+<div class="w-16 h-16 rounded-lg overflow-hidden border border-outline-variant/20">
+<img alt="Croissant" class="w-full h-full object-cover" data-alt="A macro shot of a golden, flaky croissant with perfectly defined layers of buttery pastry. It sits on a simple parchment paper inside a modern cafe setting. The lighting is warm and directional, highlighting the crisp texture and artisan quality of the bakery item against a soft-focus warm cream background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpsS_e7-bNPknPOYrmGKz8o7zttnVHJNR4tl8rkcPWKTF6qgFFUiS2YlgHJAdhZbc3iEkxnuVtVv1ckVTi2cUBh6ExCIhoyNbUV_bS6U1IJi45ml6jSKXhjwhfrPX5r-Amr1NemxmLoY-OniQMVOyCkxqfXO5pQqhTnItiT_n6TSJ1FtZcCZ9v7mrOIvL2RA79TM4l36M9grQsJRWLqprF3yMPsNbi0csFb6DJwm_vkVAHye45TMFkqHVDJBNiEs1DoWOHubBjuvap"/>
+</div>
+</td>
+<td class="px-6 py-4 font-label-md text-on-surface">Croissant de Mantequilla</td>
+<td class="px-6 py-4 font-body-md text-secondary">€2.80</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-tertiary-fixed-dim text-on-tertiary-fixed-variant text-[12px] font-label-md uppercase tracking-tight">Bollería</span>
+</td>
+<td class="px-6 py-4 font-body-md text-on-surface-variant">12 u.</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 text-primary hover:bg-primary-container/20 rounded-lg transition-all">
+<span class="material-symbols-outlined" data-icon="edit_square">edit_square</span>
+</button>
+<button class="p-2 text-error hover:bg-error-container/20 rounded-lg transition-all">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-primary-container/5 transition-colors">
+<td class="px-6 py-4">
+<div class="w-16 h-16 rounded-lg overflow-hidden border border-outline-variant/20">
+<img alt="Ethiopia Beans" class="w-full h-full object-cover" data-alt="A handful of roasted specialty coffee beans from Ethiopia, displaying a beautiful uniform medium roast. The beans are scattered artistically on a pale sand-colored ceramic tray. The scene is shot with high-key lighting that emphasizes the oily sheen and organic shapes of the beans, creating a tactile and sophisticated visual." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOPxybZ4VkWTfh5mUGtar5hwVoehDZnvPKxfiMup8EWcmNBwpO60wQa59ya8gkosw1FVp8hgciv-CJp6-kpkgh7EkQxo1ISYx2yDEfEdOx3jl92iQiZ5hsnAMiyB3ukF-74tkdO_EQGY_PTjEMqwdGapODeuwK2bi-rWxAHE97KunxleQ2VdomjO1wlcrlo7FuqlUjdCnYKMyZtzyu7BIpD1c8owSLyKS50LlymJROma73_8TDiejKUVXzfRjZTTr5KS8Qn__veKHT"/>
+</div>
+</td>
+<td class="px-6 py-4 font-label-md text-on-surface">Etiopía Sidamo 250g</td>
+<td class="px-6 py-4 font-body-md text-secondary">€18.50</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-[12px] font-label-md uppercase tracking-tight">Granos</span>
+</td>
+<td class="px-6 py-4 font-body-md text-on-surface-variant">40 u.</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 text-primary hover:bg-primary-container/20 rounded-lg transition-all">
+<span class="material-symbols-outlined" data-icon="edit_square">edit_square</span>
+</button>
+<button class="p-2 text-error hover:bg-error-container/20 rounded-lg transition-all">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-primary-container/5 transition-colors">
+<td class="px-6 py-4">
+<div class="w-16 h-16 rounded-lg overflow-hidden border border-outline-variant/20">
+<img alt="Pain au Chocolat" class="w-full h-full object-cover" data-alt="A premium pain au chocolat with a deep chocolate filling peeking out from its flaky, golden-brown crust. The pastry is dusted with a light touch of powdered sugar and sits on a slate blue plate. The composition is modern and minimalist, focusing on the rich textures and artisanal craftsmanship of the bakery product." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGH58yhsqz8SNWMTT8G9lAAnXwfoRqzkdtTkq6MtgVYZT1Zypj6FGCDnE-sOlo4ZrUABEIUJi97glPLwUWYTVYWqzQEHk3le-0MTTmTARMBuO0pyextl5GF_ZavxQjhP-5hN2V1_pUm4nuthXWYp6esio0J204Vm5mE84_reyhFgl84DaUBofxLyjxWxLNpUShgN7ll0_FC-yLI8Juo7NJG3R8Y9yTvh8vbJfkuNDvx8lBycMvhrbozHwaXaG7SdXk_PyaXjOE_s__"/>
+</div>
+</td>
+<td class="px-6 py-4 font-label-md text-on-surface">Pain au Chocolat</td>
+<td class="px-6 py-4 font-body-md text-secondary">€3.10</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-tertiary-fixed-dim text-on-tertiary-fixed-variant text-[12px] font-label-md uppercase tracking-tight">Bollería</span>
+</td>
+<td class="px-6 py-4 font-body-md text-error font-bold">4 u.</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 text-primary hover:bg-primary-container/20 rounded-lg transition-all">
+<span class="material-symbols-outlined" data-icon="edit_square">edit_square</span>
+</button>
+<button class="p-2 text-error hover:bg-error-container/20 rounded-lg transition-all">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="px-6 py-4 flex items-center justify-between border-t border-outline-variant/10 bg-surface-container-low/30">
+<span class="font-label-md text-on-surface-variant">Mostrando 4 de 42 productos</span>
+<div class="flex gap-2">
+<button class="p-2 border border-outline-variant/20 rounded-lg hover:bg-surface-container-high text-on-surface transition-all">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="p-2 bg-primary text-white rounded-lg font-label-md px-4">1</button>
+<button class="p-2 border border-outline-variant/20 rounded-lg hover:bg-surface-container-high text-on-surface transition-all px-4 font-label-md">2</button>
+<button class="p-2 border border-outline-variant/20 rounded-lg hover:bg-surface-container-high text-on-surface transition-all">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Dashboard Quick Insights (Asymmetric Layout) -->
+<div class="mt-10 grid grid-cols-12 gap-gutter">
+<div class="col-span-12 md:col-span-4 bg-surface-container border border-outline-variant/10 p-6 rounded-xl flex flex-col justify-between">
+<div>
+<span class="material-symbols-outlined text-primary text-4xl mb-2" data-icon="inventory_2">inventory_2</span>
+<h4 class="font-headline-md text-headline-md text-on-surface">Alertas de Stock</h4>
+<p class="font-body-md text-on-surface-variant mt-2">Hay 3 productos con existencias por debajo del mínimo establecido.</p>
+</div>
+<button class="mt-6 text-primary font-label-md flex items-center gap-1 hover:underline">
+                        Ver inventario crítico <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="col-span-12 md:col-span-8 bg-primary-container p-8 rounded-xl text-white flex items-center gap-8 shadow-md">
+<div class="flex-1">
+<h4 class="font-headline-md text-headline-md mb-2">Optimización de Menú</h4>
+<p class="font-body-md opacity-90">Tus ventas de café de especialidad han subido un 12% esta semana. Considera añadir una nueva variante de origen para la próxima temporada.</p>
+</div>
+<div class="w-32 h-32 rounded-lg bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/20">
+<span class="material-symbols-outlined text-5xl" data-icon="trending_up">trending_up</span>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

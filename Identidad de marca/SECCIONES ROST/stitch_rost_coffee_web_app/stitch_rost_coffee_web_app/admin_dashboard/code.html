@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&amp;family=Manrope:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #FFEDDB; /* Base background from Style Guidance */
+            color: #4D6080; /* Primary Slate Blue from User Request */
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#79593a",
+                    "on-background": "#221a0f",
+                    "outline": "#74777e",
+                    "surface-container-highest": "#efe0cd",
+                    "surface": "#fff8f3",
+                    "tertiary-fixed-dim": "#e8bf99",
+                    "surface-container": "#fbecd9",
+                    "error-container": "#ffdad6",
+                    "surface-variant": "#efe0cd",
+                    "on-tertiary-fixed-variant": "#5d4124",
+                    "surface-container-low": "#fff2e2",
+                    "error": "#ba1a1a",
+                    "secondary-container": "#f1e0ce",
+                    "on-primary": "#ffffff",
+                    "on-surface": "#221a0f",
+                    "tertiary-fixed": "#ffdcbe",
+                    "inverse-surface": "#372f22",
+                    "on-primary-fixed": "#051c38",
+                    "primary-container": "#4d6080",
+                    "on-error": "#ffffff",
+                    "on-primary-container": "#c8dbff",
+                    "primary-fixed-dim": "#b4c7ec",
+                    "surface-container-high": "#f5e6d3",
+                    "on-secondary-container": "#6f6254",
+                    "on-tertiary-container": "#fdd2ab",
+                    "on-error-container": "#93000a",
+                    "secondary": "#695c4e",
+                    "on-secondary-fixed-variant": "#504538",
+                    "primary-fixed": "#d5e3ff",
+                    "on-tertiary-fixed": "#2c1601",
+                    "inverse-primary": "#b4c7ec",
+                    "secondary-fixed-dim": "#d4c4b3",
+                    "on-primary-fixed-variant": "#344766",
+                    "surface-tint": "#4c5f7f",
+                    "on-secondary": "#ffffff",
+                    "primary": "#354867",
+                    "surface-dim": "#e6d8c5",
+                    "on-tertiary": "#ffffff",
+                    "background": "#fff8f3",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary": "#5f4225",
+                    "on-secondary-fixed": "#231a0f",
+                    "outline-variant": "#c4c6ce",
+                    "secondary-fixed": "#f1e0ce",
+                    "surface-bright": "#fff8f3",
+                    "inverse-on-surface": "#feefdb",
+                    "on-surface-variant": "#44474d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "unit": "8px",
+                    "container-max": "1280px",
+                    "gutter": "24px",
+                    "margin-desktop": "48px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Bricolage Grotesque"],
+                    "body-md": ["Manrope"],
+                    "headline-md": ["Bricolage Grotesque"],
+                    "headline-lg-mobile": ["Bricolage Grotesque"],
+                    "display-lg": ["Bricolage Grotesque"],
+                    "label-md": ["Manrope"],
+                    "body-lg": ["Manrope"]
+            },
+            "fontSize": {
+                    "headline-lg": ["40px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-md": ["28px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background min-h-screen flex overflow-hidden">
+<!-- SideNavBar Integration -->
+<aside class="hidden md:flex flex-col h-screen w-64 left-0 bg-surface-container border-r border-outline-variant/20 py-unit space-y-2">
+<div class="px-6 py-8">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">ROST Admin</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Specialty Coffee Management</p>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Active State: Dashboard -->
+<a class="flex items-center gap-3 bg-primary-container text-on-primary-container rounded-lg px-4 py-3 mx-2 translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-md text-label-md">Orders</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="coffee">coffee</span>
+<span class="font-label-md text-label-md">Products</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="liquor">liquor</span>
+<span class="font-label-md text-label-md">Ingredients</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="category">category</span>
+<span class="font-label-md text-label-md">Categories</span>
+</a>
+</nav>
+<div class="px-4 pb-4">
+<button class="w-full bg-primary text-on-primary rounded-lg py-3 font-label-md text-label-md flex justify-center items-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined">add</span>
+                New Product
+            </button>
+</div>
+<div class="border-t border-outline-variant/10 pt-4 pb-6">
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label-md text-label-md">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto p-gutter lg:p-margin-desktop">
+<!-- Header Section -->
+<header class="mb-10 flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Panel de Control</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-2">Bienvenido de nuevo. Aquí está el resumen de hoy.</p>
+</div>
+<div class="flex items-center gap-4 bg-surface-container-high p-2 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="text-right px-2">
+<p class="font-label-md text-label-md text-primary">Admin ROST</p>
+<p class="text-[12px] text-on-surface-variant">Master Roaster</p>
+</div>
+<img alt="Admin Avatar" class="w-12 h-12 rounded-lg object-cover" data-alt="A professional headshot of a middle-aged man with a groomed beard and sophisticated attire, set against a warm, soft-focus studio background. The lighting is elegant and directional, highlighting his friendly yet authoritative expression. The overall aesthetic is artisanal and high-end, perfectly fitting the premium coffee brand ROST." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9SGHCkqToJ_Mz_8FOVgF1MoREj2Vqm5QKgmjrA9CNdUUUlQj1tjLDs_k-l9cN9duB6d_d5wiGu0E8ahj6nV2ORjEriq7vByUikWYR-3JoRxNXbjdOy04vkD1GAzWzY2bz9LCQW1LxgZj_tRNjO8xEO1kTMPwJiTrdApIzETTCxAMB19-XBwP0sL1iKcO6umiau3_PNOVSb9pRpT-stqydS_FX73bIgPtFRmWB9UzOzXyRTarGBYLCAcv4yagTxvpCTl3V1Bjmav5S"/>
+</div>
+</header>
+<!-- Stats Grid (Estadísticas rápidas) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-10">
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/5 flex flex-col justify-between hover:translate-y-[-4px] transition-transform duration-300">
+<div>
+<span class="material-symbols-outlined text-primary mb-4" style="font-variation-settings: 'FILL' 1;">payments</span>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Ventas del Día</p>
+</div>
+<div class="mt-4">
+<h3 class="font-headline-md text-headline-md text-primary">$1,240.50</h3>
+<p class="text-green-600 font-label-md text-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">trending_up</span> +12% vs ayer
+                    </p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/5 flex flex-col justify-between hover:translate-y-[-4px] transition-transform duration-300">
+<div>
+<span class="material-symbols-outlined text-primary mb-4" style="font-variation-settings: 'FILL' 1;">pending_actions</span>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Pedidos Pendientes</p>
+</div>
+<div class="mt-4">
+<h3 class="font-headline-md text-headline-md text-primary">24</h3>
+<p class="text-on-surface-variant font-label-md text-label-md">8 preparados • 16 nuevos</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/5 flex flex-col justify-between hover:translate-y-[-4px] transition-transform duration-300">
+<div>
+<span class="material-symbols-outlined text-error mb-4" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Alertas de Stock</p>
+</div>
+<div class="mt-4">
+<h3 class="font-headline-md text-headline-md text-error">3 Items</h3>
+<p class="text-error font-label-md text-label-md">Requiere atención inmediata</p>
+</div>
+</div>
+</div>
+<!-- Sales Chart Section (Gráfico estético y limpio) -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<div class="lg:col-span-2 bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/5">
+<div class="flex justify-between items-center mb-8">
+<h4 class="font-headline-md text-headline-md text-primary">Ventas Semanales</h4>
+<select class="bg-surface-container-high border-none rounded-lg font-label-md text-label-md text-primary px-4 py-2">
+<option>Últimos 7 días</option>
+<option>Último mes</option>
+</select>
+</div>
+<!-- Simulated Clean Minimalist Chart -->
+<div class="h-64 flex items-end justify-between gap-4 px-4">
+<div class="flex flex-col items-center gap-4 w-full">
+<div class="w-full bg-primary/10 rounded-t-lg transition-all duration-500" style="height: 45%;"></div>
+<span class="font-label-md text-label-md text-on-surface-variant">Lun</span>
+</div>
+<div class="flex flex-col items-center gap-4 w-full">
+<div class="w-full bg-primary/10 rounded-t-lg transition-all duration-500" style="height: 65%;"></div>
+<span class="font-label-md text-label-md text-on-surface-variant">Mar</span>
+</div>
+<div class="flex flex-col items-center gap-4 w-full">
+<div class="w-full bg-primary/20 rounded-t-lg transition-all duration-500" style="height: 55%;"></div>
+<span class="font-label-md text-label-md text-on-surface-variant">Mié</span>
+</div>
+<div class="flex flex-col items-center gap-4 w-full">
+<div class="w-full bg-primary-container rounded-t-lg transition-all duration-500" style="height: 90%;"></div>
+<span class="font-label-md text-label-md text-on-surface-variant">Jue</span>
+</div>
+<div class="flex flex-col items-center gap-4 w-full">
+<div class="w-full bg-primary/30 rounded-t-lg transition-all duration-500" style="height: 75%;"></div>
+<span class="font-label-md text-label-md text-on-surface-variant">Vie</span>
+</div>
+<div class="flex flex-col items-center gap-4 w-full">
+<div class="w-full bg-primary/40 rounded-t-lg transition-all duration-500" style="height: 85%;"></div>
+<span class="font-label-md text-label-md text-on-surface-variant">Sáb</span>
+</div>
+<div class="flex flex-col items-center gap-4 w-full">
+<div class="w-full bg-primary/20 rounded-t-lg transition-all duration-500" style="height: 40%;"></div>
+<span class="font-label-md text-label-md text-on-surface-variant">Dom</span>
+</div>
+</div>
+</div>
+<!-- Best Sellers (Productos más vendidos) -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/5">
+<h4 class="font-headline-md text-headline-md text-primary mb-8">Más Vendidos</h4>
+<div class="space-y-6">
+<div class="flex items-center gap-4 group cursor-pointer">
+<img alt="Ethiopean Yirgacheffe" class="w-16 h-16 rounded-lg object-cover shadow-sm group-hover:scale-105 transition-transform" data-alt="A close-up of a premium bag of specialty coffee beans, ROST brand. The packaging is minimalist, featuring a textured matte finish in deep slate blue and warm cream. It is placed on a rustic wooden table with soft morning sunlight creating gentle shadows. The mood is artisanal, warm, and sophisticated." src="https://lh3.googleusercontent.com/aida-public/AB6AXuComqx-XXMRAOQ5l-NVy51rvoBWJSNgDTCIxCEbbw4TbbEeRdm7AOM0XncC3k8Ws29T-3Lv50x4yBgeol6wCZu8pY5AqSqcVkl6NP1ucPEaUPjn4O1LNZIzcQoy9Sflf9sWI_I-zZfsKL58URjPcx50euo1SVuvKyCJsjCYtqCJosCiwNDy1P8I75iZvoXXmBgqvZJ0Ogu_ieLTPCUaOmWHiZDydekfH69kBRGXPOS2sWQQ5I3p1lz39I6JJ6i10Ily8JkaIPwIXqqP"/>
+<div class="flex-1">
+<p class="font-label-md text-label-md text-primary font-bold">Ethiopia Yirgacheffe</p>
+<p class="font-body-md text-[13px] text-on-surface-variant">142 vendidos este mes</p>
+</div>
+<span class="font-label-md text-label-md text-primary">$24.00</span>
+</div>
+<div class="flex items-center gap-4 group cursor-pointer">
+<img alt="Flat White Signature" class="w-16 h-16 rounded-lg object-cover shadow-sm group-hover:scale-105 transition-transform" data-alt="A beautifully prepared flat white coffee in a ceramic cup, with delicate latte art. The cup is resting on a clean, light-colored stone coaster in a minimalist cafe setting. The lighting is soft and diffused, highlighting the creamy texture of the milk and the rich color of the coffee. The aesthetic is clean, modern, and inviting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWWLeMxtDIDFgfq9JL30S0rJv5wXvYR8BEv9vxWN1X9TcJg_h-R1Tp1kkFvkKd8HF1Dcv6HG9bEm_72oHImq1xRiynGrnsV5uEQuBGl_tCVsBicTQs_rtWGioKQLq2RigjckuyY_Vn5d-C6aE_fZmMsdhpIBLoljR2qqiE8mMfu9LdcyqjLCu9gQmVVKj52gbLCMazz-MJRZ6MqcNEKISXTWuftwxU1hF-WgjMYBIOwsTCK0oQadDf-iXtHzpIexzydfsLogtX6suu"/>
+<div class="flex-1">
+<p class="font-label-md text-label-md text-primary font-bold">Flat White Signature</p>
+<p class="font-body-md text-[13px] text-on-surface-variant">98 vendidos este mes</p>
+</div>
+<span class="font-label-md text-label-md text-primary">$4.50</span>
+</div>
+<div class="flex items-center gap-4 group cursor-pointer">
+<img alt="Cold Brew Concentrate" class="w-16 h-16 rounded-lg object-cover shadow-sm group-hover:scale-105 transition-transform" data-alt="A clear glass of iced cold brew coffee with perfectly layered milk and ice cubes. The glass is sweat-beaded, indicating its cold temperature. It sits on a minimalist surface against a bright, airy background. The visual style is refreshing, high-contrast, and modern, reflecting a premium artisanal beverage." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCS-_v5a2lv_9aeRCjC7yzTAsTcCEAqZjy_bD5TfrENoxapOJhTWcsqnescZib3dmULgkoiNZi9rbhLX221SJyBE6oOg4njrEcYs3v10Kg4VyR8YgXDJFlWAfpe3bPGQiEuMPDUmJKXqv0XgfKYgkx94p4QaoVjwc7VnNRpEYPEx3ur21t14Kg9p8Vw-HFOfzsHnxbSCq41OerJW3pF169sQhaibzfxG0OEl4MQKwnkrSz7Bqq5v0s7VM575ae_AnwDXrOs_kA7eDce"/>
+<div class="flex-1">
+<p class="font-label-md text-label-md text-primary font-bold">Cold Brew Conc.</p>
+<p class="font-body-md text-[13px] text-on-surface-variant">76 vendidos este mes</p>
+</div>
+<span class="font-label-md text-label-md text-primary">$18.00</span>
+</div>
+</div>
+<button class="w-full mt-8 py-3 border border-primary text-primary rounded-lg font-label-md text-label-md hover:bg-primary hover:text-white transition-all">Ver Inventario Completo</button>
+</div>
+</div>
+<!-- Recent Orders Table (Lista de pedidos recientes) -->
+<section class="mt-10 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/5 overflow-hidden">
+<div class="px-8 py-6 flex justify-between items-center border-b border-outline-variant/10">
+<h4 class="font-headline-md text-headline-md text-primary">Pedidos Recientes</h4>
+<button class="text-primary font-label-md text-label-md flex items-center gap-2">
+                    Ver todos <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-high">
+<tr>
+<th class="px-8 py-4 font-label-md text-label-md text-primary uppercase tracking-wider">Orden ID</th>
+<th class="px-8 py-4 font-label-md text-label-md text-primary uppercase tracking-wider">Cliente</th>
+<th class="px-8 py-4 font-label-md text-label-md text-primary uppercase tracking-wider">Productos</th>
+<th class="px-8 py-4 font-label-md text-label-md text-primary uppercase tracking-wider">Total</th>
+<th class="px-8 py-4 font-label-md text-label-md text-primary uppercase tracking-wider">Estado</th>
+<th class="px-8 py-4 font-label-md text-label-md text-primary uppercase tracking-wider">Acción</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-8 py-5 font-body-md text-body-md text-primary font-bold">#ORD-4290</td>
+<td class="px-8 py-5 font-body-md text-body-md text-on-surface-variant">Carlos Méndez</td>
+<td class="px-8 py-5 font-body-md text-body-md text-on-surface-variant">2x Ethiopia, 1x V60 Filter</td>
+<td class="px-8 py-5 font-body-md text-body-md text-primary font-bold">$68.50</td>
+<td class="px-8 py-5">
+<span class="px-3 py-1 bg-green-100 text-green-700 rounded-full font-label-md text-[12px] uppercase tracking-wide">Completado</span>
+</td>
+<td class="px-8 py-5">
+<button class="material-symbols-outlined text-primary">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-8 py-5 font-body-md text-body-md text-primary font-bold">#ORD-4291</td>
+<td class="px-8 py-5 font-body-md text-body-md text-on-surface-variant">Lucía Fernández</td>
+<td class="px-8 py-5 font-body-md text-body-md text-on-surface-variant">1x Chemex, 1x Colombia Roast</td>
+<td class="px-8 py-5 font-body-md text-body-md text-primary font-bold">$54.20</td>
+<td class="px-8 py-5">
+<span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full font-label-md text-[12px] uppercase tracking-wide">Preparando</span>
+</td>
+<td class="px-8 py-5">
+<button class="material-symbols-outlined text-primary">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-8 py-5 font-body-md text-body-md text-primary font-bold">#ORD-4292</td>
+<td class="px-8 py-5 font-body-md text-body-md text-on-surface-variant">Roberto Gómez</td>
+<td class="px-8 py-5 font-body-md text-body-md text-on-surface-variant">3x Iced Latté, 2x Croissant</td>
+<td class="px-8 py-5 font-body-md text-body-md text-primary font-bold">$22.00</td>
+<td class="px-8 py-5">
+<span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full font-label-md text-[12px] uppercase tracking-wide">Nuevo</span>
+</td>
+<td class="px-8 py-5">
+<button class="material-symbols-outlined text-primary">more_vert</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Footer Integration -->
+<footer class="w-full py-12 px-0 flex flex-col md:flex-row justify-between items-center mt-12 border-t border-outline-variant/10">
+<p class="font-body-md text-body-md text-secondary">© 2024 ROST Specialty Coffee. Crafted with intention.</p>
+<div class="flex gap-8 mt-4 md:mt-0">
+<a class="font-label-md text-label-md text-on-secondary-container hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-label-md text-label-md text-on-secondary-container hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-md text-label-md text-on-secondary-container hover:text-primary transition-colors" href="#">Contact Us</a>
+</div>
+</footer>
+</main>
+</body></html>

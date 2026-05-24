@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&amp;family=Manrope:wght@400;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-container": "#79593a",
+                      "on-background": "#221a0f",
+                      "outline": "#74777e",
+                      "surface-container-highest": "#efe0cd",
+                      "surface": "#fff8f3",
+                      "tertiary-fixed-dim": "#e8bf99",
+                      "surface-container": "#fbecd9",
+                      "error-container": "#ffdad6",
+                      "surface-variant": "#efe0cd",
+                      "on-tertiary-fixed-variant": "#5d4124",
+                      "surface-container-low": "#fff2e2",
+                      "error": "#ba1a1a",
+                      "secondary-container": "#f1e0ce",
+                      "on-primary": "#ffffff",
+                      "on-surface": "#221a0f",
+                      "tertiary-fixed": "#ffdcbe",
+                      "inverse-surface": "#372f22",
+                      "on-primary-fixed": "#051c38",
+                      "primary-container": "#4d6080",
+                      "on-error": "#ffffff",
+                      "on-primary-container": "#c8dbff",
+                      "primary-fixed-dim": "#b4c7ec",
+                      "surface-container-high": "#f5e6d3",
+                      "on-secondary-container": "#6f6254",
+                      "on-tertiary-container": "#fdd2ab",
+                      "on-error-container": "#93000a",
+                      "secondary": "#695c4e",
+                      "on-secondary-fixed-variant": "#504538",
+                      "primary-fixed": "#d5e3ff",
+                      "on-tertiary-fixed": "#2c1601",
+                      "inverse-primary": "#b4c7ec",
+                      "secondary-fixed-dim": "#d4c4b3",
+                      "on-primary-fixed-variant": "#344766",
+                      "surface-tint": "#4c5f7f",
+                      "on-secondary": "#ffffff",
+                      "primary": "#354867",
+                      "surface-dim": "#e6d8c5",
+                      "on-tertiary": "#ffffff",
+                      "background": "#fff8f3",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary": "#5f4225",
+                      "on-secondary-fixed": "#231a0f",
+                      "outline-variant": "#c4c6ce",
+                      "secondary-fixed": "#f1e0ce",
+                      "surface-bright": "#fff8f3",
+                      "inverse-on-surface": "#feefdb",
+                      "on-surface-variant": "#44474d"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "16px",
+                      "unit": "8px",
+                      "container-max": "1280px",
+                      "gutter": "24px",
+                      "margin-desktop": "48px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Bricolage Grotesque"],
+                      "body-md": ["Manrope"],
+                      "headline-md": ["Bricolage Grotesque"],
+                      "headline-lg-mobile": ["Bricolage Grotesque"],
+                      "display-lg": ["Bricolage Grotesque"],
+                      "label-md": ["Manrope"],
+                      "body-lg": ["Manrope"]
+              },
+              "fontSize": {
+                      "headline-lg": ["40px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "headline-md": ["28px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #fff8f3;
+            color: #221a0f;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-surface shadow-sm h-20">
+<div class="flex justify-between items-center w-full px-margin-desktop h-full max-w-container-max mx-auto">
+<!-- Brand & Search -->
+<div class="flex items-center gap-12 flex-1">
+<span class="font-headline-lg text-headline-lg font-bold text-primary">ROST</span>
+<div class="hidden md:flex relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg pl-12 pr-4 py-2 focus:ring-2 focus:ring-primary transition-all font-body-md text-body-md" placeholder="Buscar granos, tés o pastelería..." type="text"/>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="hidden md:flex items-center gap-8 px-8">
+<a class="text-primary font-bold border-b-2 border-primary py-1 font-label-md text-label-md" href="#">Store</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors py-1 font-label-md text-label-md" href="#">History</a>
+</nav>
+<!-- Actions -->
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-surface-container-low transition-all text-on-surface-variant active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container-low transition-all text-on-surface-variant active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+</div>
+</div>
+</header>
+<main class="pt-20">
+<!-- Hero Section -->
+<section class="relative w-full h-[450px] overflow-hidden bg-surface-container flex items-center justify-center">
+<div class="absolute inset-0 bg-gradient-to-r from-surface-container via-transparent to-surface-container z-10"></div>
+<div class="relative z-20 text-center px-margin-mobile">
+<img alt="ROST Logo" class="mx-auto h-24 mb-8" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA55NLbxz3cOS-6DkgUlDxUvtwo_ufL5s4JFE55tYr6YCSLDJpPVkgSCVt2ST2z9d7rS3JIlmR5Es6mx1FPUCks2BAkcOSxyMiG_IxSlFG-xMKK383Dfba5FTtK09oYMJZNYfJD8K5oh8mlABzTGWPGHV9-mOg2OtSznGorHzbIaix9dVRuq7XV5ZogqdWOye86xKBHVzo3QRaHx4ivxz6nBUYklJWTNTnDJp-HC99Vr5tf2rSa7XGn2_l_XTpIDLQB-u7vobLHKN5h"/>
+<h1 class="font-display-lg text-[48px] md:text-display-lg text-primary max-w-3xl mx-auto leading-tight">
+                    El ritual del café, elevado a su máxima expresión.
+                </h1>
+<p class="mt-6 font-body-lg text-body-lg text-on-surface-variant max-w-xl mx-auto">
+                    Seleccionamos granos de especialidad de origen único, tostados artesanalmente para capturar la esencia de la tierra.
+                </p>
+</div>
+<div class="absolute inset-0 opacity-20">
+<img class="w-full h-full object-cover" data-alt="A high-end specialty coffee shop interior with soft, warm morning sunlight streaming through large windows. The scene features artisanal wooden counters, minimalist slate blue accents, and professional espresso machines. The lighting is bright and inviting, creating a high-key light-mode aesthetic that emphasizes textures of wood and polished metal. The mood is tranquil and sophisticated." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLOAasjpPHoHw84Km_0Lu1McJXRH3bGfmhGlMOT4W-7ASrPTP-VevTfDigxrdYMppW5PpmXDhJlFJMndQowuCR0ponzCk4Wfbq42TG7GKDMCJU6OQpW3AddYU_UquSK9y9cgJ0H3SseT3g4-7sU5fQwQGU9ASbOMiGyJJDfQsF2UV9G4l6WeBo1ZQ1FSJ-9mFCp4nwhTgDJngJJcYHGQtGCGLczHtg-QuZqli72a0DnXWCz89QUYv9WvxHRk9YnlxFTlb3iS_x1lln"/>
+</div>
+</section>
+<!-- Filters & Search Mobile -->
+<section class="max-w-container-max mx-auto px-margin-desktop py-8">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div class="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
+<button class="px-6 py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md whitespace-nowrap">Todos</button>
+<button class="px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-primary-container/20 transition-all font-label-md text-label-md whitespace-nowrap">Café</button>
+<button class="px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-primary-container/20 transition-all font-label-md text-label-md whitespace-nowrap">Té</button>
+<button class="px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-primary-container/20 transition-all font-label-md text-label-md whitespace-nowrap">Bakery</button>
+<button class="px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-primary-container/20 transition-all font-label-md text-label-md whitespace-nowrap">Accesorios</button>
+</div>
+<div class="flex items-center gap-4">
+<div class="font-label-md text-label-md text-on-surface-variant">Ordenar por:</div>
+<select class="bg-transparent border-none font-bold text-primary focus:ring-0 cursor-pointer">
+<option>Más recientes</option>
+<option>Precio: menor a mayor</option>
+<option>Precio: mayor a menor</option>
+</select>
+</div>
+</div>
+</section>
+<!-- Product Grid -->
+<section class="max-w-container-max mx-auto px-margin-desktop pb-24">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-gutter">
+<!-- Product Card 1 -->
+<div class="group bg-surface-container-high rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl border border-outline-variant/10">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A premium bag of specialty coffee beans placed on a warm cream surface. The packaging is minimalist with elegant typography and slate blue accents. Soft studio lighting creates gentle shadows, highlighting the tactile texture of the paper bag. The background is a clean, modern cafe setting with a focus on artisanal craftsmanship and high-quality presentation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiSl0he1-r3ze3RAqoDDjRiV2siE44RcVwqFuvbtNWNbYkdb0MTBGa-fteSB2_tC-IF-uN7hKpl0Yc0598I89wtOJdqdEUaPSlNyfv7xN6OkfLk8zAZSqLFI93DqsD6Av3q8chUcjxcgY_I_R3RXVg88xPY-D0LZkjoLFMdDpuys2gT0bQScnoB_ex507XiBCNsRgF1LNEH_RUti-DYPfnRXxqhsyKXgBfmignRZDkEY5VygLtCbw-ULZUmxLmBluhhdXbCYnwPyhA"/>
+<span class="absolute top-4 left-4 bg-primary-container text-on-primary-container px-3 py-1 rounded-full font-label-md text-label-md uppercase tracking-wider">Origen único</span>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-on-surface-variant font-label-md text-label-md uppercase mb-1">Café</p>
+<h3 class="font-headline-md text-headline-md text-primary leading-tight">Etiopía Yirgacheffe</h3>
+</div>
+<button class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 mb-4">Notas de jazmín, limón y té negro. Tueste ligero artesanal.</p>
+<div class="flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-on-background font-bold">$24.50</span>
+<div class="flex text-on-surface-variant/40">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined">star</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="group bg-surface-container-high rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl border border-outline-variant/10">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A delicate porcelain cup filled with golden Earl Grey tea, accompanied by fresh loose tea leaves scattered on a warm cream tabletop. The lighting is soft and airy, evoking a peaceful afternoon ritual. The composition is clean and minimalist, using a palette of soft browns, creams, and slate blue accents. The style is modern yet soulful." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcKMQ5Tectr2e_qIUMGC4wTjFAI8xQbSUlmgjTIekMEoTkByoXQBr9n6mLTK551auX5KNJTI0Qj-7_WVNmbjY__lFJpmlS2ROxTgRscT73_yUETG8mqCh7igP270LaiQmKGQV7b78NvYSNmuLwctAzWI1AbYMgsaazrS8qg5V6_JhXJSTawL0Id4cSXwdYl4B5xfMasfhfVTZGUeDUBZAQE0gBRI7oiBGck3GE29U2KEpXfCeQvshY1cDg95WTPFv4VP5niKOQJccF"/>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-on-surface-variant font-label-md text-label-md uppercase mb-1">Té</p>
+<h3 class="font-headline-md text-headline-md text-primary leading-tight">Earl Grey Imperial</h3>
+</div>
+<button class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 mb-4">Té negro de alta montaña con bergamota de Calabria.</p>
+<div class="flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-on-background font-bold">$18.00</span>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="group bg-surface-container-high rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl border border-outline-variant/10">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Freshly baked artisanal croissants on a rustic wooden tray inside a minimalist modern bakery. The pastry has a golden-brown, flaky texture that catches the warm, diffused morning light. The setting is clean and high-end, with cream-colored surfaces and subtle slate blue details in the background. The atmosphere is warm, inviting, and professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD937aYDNvjJEoM5A4oYECkc07hXbLdRMbpW4Q4CCy8cs7UtSjeO7vTYVcSbSqFD1_9SPv4JQCekAt9LPzvA_ryEuSwVDrVzaCtCeoIof8z_i1B17jTRYedXdfmQa9Ti7RQ0pWTSbaB8B5AXk6BtsRSxhkBfmR8hgXBZrarwkoIG0Bspyy0N5Ke7InECr4sObmLbUzx45WvF-SSiYpDIJ9SIWfoPqq5zMmCFEmgCzLr3-VuzGmHOJEm3ATFNG-Ky3OW02JcJZCY02CF"/>
+<span class="absolute top-4 left-4 bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full font-label-md text-label-md uppercase tracking-wider">Horneado hoy</span>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-on-surface-variant font-label-md text-label-md uppercase mb-1">Bakery</p>
+<h3 class="font-headline-md text-headline-md text-primary leading-tight">Croissant de Mantequilla</h3>
+</div>
+<button class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 mb-4">Hojaldre artesanal con 24 horas de fermentación lenta.</p>
+<div class="flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-on-background font-bold">$4.50</span>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="group bg-surface-container-high rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl border border-outline-variant/10">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A minimalist cold brew glass bottle with a clean white label, condensation on the glass suggesting it is ice cold. The scene is set on a pale sand-colored surface with soft daylight. The aesthetic is extremely modern and crisp, emphasizing the artisanal and scientific nature of specialty coffee. Background is a blur of warm cream and slate blue tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfAJguqAAsM_-raKZtTh8wCi0wUesK2YkzcPBZLlHRXgBL9jkhtMxVJAUCjqXPtwYPnwA7OsY3PhVbKKpF0IEMUbY8oMgP_y9pwRZhMwjQu00Wpuwf6n55e7VFDQZMrbLhEYSCl2luO3ayaFqD8T6BKOQDSdcE_DIQQ3amNVj1hdiF6IlI9DzRPj8Gvd1Q2gU3eQKQK2NG_rD8y_IquehfJCk_yp6tOZt-kKPIUVkmHIROlzM7RaiqwnIW6VxIaE_k6Gvjrv0Yu255"/>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-on-surface-variant font-label-md text-label-md uppercase mb-1">Café</p>
+<h3 class="font-headline-md text-headline-md text-primary leading-tight">Cold Brew Reserve</h3>
+</div>
+<button class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 mb-4">Infusión en frío por 18 horas para un sabor sedoso y dulce.</p>
+<div class="flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-on-background font-bold">$6.50</span>
+</div>
+</div>
+</div>
+<!-- Product Card 5 -->
+<div class="group bg-surface-container-high rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl border border-outline-variant/10">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A rustic sourdough bread loaf on a linen napkin, showing deep crust scoring and a light dusting of flour. The setting is a bright, high-key kitchen with minimalist aesthetics. Warm natural light creates a tactile feel, highlighting the artisanal quality of the bakery product. The color palette is dominated by warm creams, deep browns, and subtle slate blue shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4ygM3TQ_iljeZiQ5uDcHfYREEumFtT5sl0z15qS5gTkwm7n6fZDC80w918JzbaApMxl56Sl5VbNDKNMVDp8ZbSQQvvkiD6Ny4m7zzvDKkHkqQjxwQIFT_78C6dHLFSTESvrYT0-DsOHmmd9dvkNBQEsipdAvc1a904xUj3Y3ZYU6nZDciKJRJzL9vmnZ6O_5_0va8zrZQrc0mxhqej5gBdybEoXEwuKYrfv2J9QpN6Z74tcigWddG9XfAsadX5TvPqhGoGyzOnJZu"/>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-on-surface-variant font-label-md text-label-md uppercase mb-1">Bakery</p>
+<h3 class="font-headline-md text-headline-md text-primary leading-tight">Hogaza Sourdough</h3>
+</div>
+<button class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 mb-4">Masa madre natural con harina orgánica de piedra.</p>
+<div class="flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-on-background font-bold">$8.00</span>
+</div>
+</div>
+</div>
+<!-- Product Card 6 -->
+<div class="group bg-surface-container-high rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl border border-outline-variant/10">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A professional high-end manual coffee grinder made of polished steel and wood, sitting on a minimalist cafe counter. The lighting is focused and warm, emphasizing the quality and precision of the tool. The background is a sophisticated coffee shop with slate blue accents. The scene conveys a sense of intentionality and passion for specialty coffee culture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMd9FtCl9Pn54PwxqhXw6Zo1UDehVnsbQH9eABjYuBknd82kGWIUUoL8M6k3No7x0VV2F12GiczeGR-yjah25my9kgPxV-cUgH-0MpwQNEnbv80R-STmCAj5ogiTdwT4mpbdNxtTW4IfLXWqhnj0t41fM1jkidE-j4Y-YsV11QsPGn-v7HK-DxTm_t_9x2qSuSzuGQwdtZHFFtSqxmhGrUJZIRaeF1y5c5yQ3rQO4BJ-PR-7aqA2gMJFLgQU0r2lYpB49I8sUf-Yvm"/>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-on-surface-variant font-label-md text-label-md uppercase mb-1">Accesorios</p>
+<h3 class="font-headline-md text-headline-md text-primary leading-tight">Molino de Mano Pro</h3>
+</div>
+<button class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 mb-4">Muelas cerámicas ajustables para un molido uniforme.</p>
+<div class="flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-on-background font-bold">$125.00</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Newsletter / CTA Section -->
+<section class="bg-surface-container py-24">
+<div class="max-w-4xl mx-auto text-center px-margin-mobile">
+<h2 class="font-headline-lg text-headline-lg text-primary mb-6">Únete a nuestra cultura cafetera</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-10">Suscríbete para recibir noticias sobre nuevos tostados exclusivos, eventos de cata y guías de preparación en casa.</p>
+<form class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
+<input class="flex-1 bg-surface border border-outline-variant rounded-lg px-6 py-4 focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-body-md" placeholder="Tu correo electrónico" type="email"/>
+<button class="bg-primary text-on-primary px-10 py-4 rounded-lg font-label-md text-label-md hover:shadow-lg transition-all active:scale-95">Suscribirme</button>
+</form>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 px-margin-desktop bg-surface-container-lowest border-t border-outline-variant/10">
+<div class="max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="text-center md:text-left">
+<span class="font-headline-md text-headline-md text-primary font-bold">ROST</span>
+<p class="mt-2 text-on-secondary-container font-body-md text-body-md max-w-xs">
+                    Elevando cada taza a través del tueste consciente y la curaduría de origen.
+                </p>
+</div>
+<div class="flex gap-8">
+<a class="text-on-secondary-container hover:text-primary transition-colors font-label-md text-label-md" href="#">Terms of Service</a>
+<a class="text-on-secondary-container hover:text-primary transition-colors font-label-md text-label-md" href="#">Privacy Policy</a>
+<a class="text-on-secondary-container hover:text-primary transition-colors font-label-md text-label-md" href="#">Contact Us</a>
+</div>
+<div class="text-secondary font-label-md text-label-md">
+                © 2024 ROST Specialty Coffee. Crafted with intention.
+            </div>
+</div>
+</footer>
+<!-- Floating Action Button for Cart (Mobile Contextual) -->
+<div class="fixed bottom-6 right-6 md:hidden z-50">
+<button class="w-16 h-16 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-3xl">shopping_cart</span>
+<span class="absolute -top-1 -right-1 bg-tertiary text-on-tertiary w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold">3</span>
+</button>
+</div>
+</body></html>

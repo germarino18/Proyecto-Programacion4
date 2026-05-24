@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&amp;family=Manrope:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#79593a",
+                    "on-background": "#221a0f",
+                    "outline": "#74777e",
+                    "surface-container-highest": "#efe0cd",
+                    "surface": "#fff8f3",
+                    "tertiary-fixed-dim": "#e8bf99",
+                    "surface-container": "#fbecd9",
+                    "error-container": "#ffdad6",
+                    "surface-variant": "#efe0cd",
+                    "on-tertiary-fixed-variant": "#5d4124",
+                    "surface-container-low": "#fff2e2",
+                    "error": "#ba1a1a",
+                    "secondary-container": "#f1e0ce",
+                    "on-primary": "#ffffff",
+                    "on-surface": "#221a0f",
+                    "tertiary-fixed": "#ffdcbe",
+                    "inverse-surface": "#372f22",
+                    "on-primary-fixed": "#051c38",
+                    "primary-container": "#4d6080",
+                    "on-error": "#ffffff",
+                    "on-primary-container": "#c8dbff",
+                    "primary-fixed-dim": "#b4c7ec",
+                    "surface-container-high": "#f5e6d3",
+                    "on-secondary-container": "#6f6254",
+                    "on-tertiary-container": "#fdd2ab",
+                    "on-error-container": "#93000a",
+                    "secondary": "#695c4e",
+                    "on-secondary-fixed-variant": "#504538",
+                    "primary-fixed": "#d5e3ff",
+                    "on-tertiary-fixed": "#2c1601",
+                    "inverse-primary": "#b4c7ec",
+                    "secondary-fixed-dim": "#d4c4b3",
+                    "on-primary-fixed-variant": "#344766",
+                    "surface-tint": "#4c5f7f",
+                    "on-secondary": "#ffffff",
+                    "primary": "#354867",
+                    "surface-dim": "#e6d8c5",
+                    "on-tertiary": "#ffffff",
+                    "background": "#fff8f3",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary": "#5f4225",
+                    "on-secondary-fixed": "#231a0f",
+                    "outline-variant": "#c4c6ce",
+                    "secondary-fixed": "#f1e0ce",
+                    "surface-bright": "#fff8f3",
+                    "inverse-on-surface": "#feefdb",
+                    "on-surface-variant": "#44474d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "unit": "8px",
+                    "container-max": "1280px",
+                    "gutter": "24px",
+                    "margin-desktop": "48px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Bricolage Grotesque"],
+                    "body-md": ["Manrope"],
+                    "headline-md": ["Bricolage Grotesque"],
+                    "headline-lg-mobile": ["Bricolage Grotesque"],
+                    "display-lg": ["Bricolage Grotesque"],
+                    "label-md": ["Manrope"],
+                    "body-lg": ["Manrope"]
+            },
+            "fontSize": {
+                    "headline-lg": ["40px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-md": ["28px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #FFEDDB; /* Base level 0: Warm Cream */
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-surface antialiased flex flex-col min-h-screen">
+<main class="flex-grow flex items-center justify-center px-margin-mobile md:px-0 py-12">
+<div class="w-full max-w-[440px] flex flex-col items-center">
+<!-- Brand Identity: Logo -->
+<div class="mb-12">
+<img alt="ROST Logo" class="h-16 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA55NLbxz3cOS-6DkgUlDxUvtwo_ufL5s4JFE55tYr6YCSLDJpPVkgSCVt2ST2z9d7rS3JIlmR5Es6mx1FPUCks2BAkcOSxyMiG_IxSlFG-xMKK383Dfba5FTtK09oYMJZNYfJD8K5oh8mlABzTGWPGHV9-mOg2OtSznGorHzbIaix9dVRuq7XV5ZogqdWOye86xKBHVzo3QRaHx4ivxz6nBUYklJWTNTnDJp-HC99Vr5tf2rSa7XGn2_l_XTpIDLQB-u7vobLHKN5h"/>
+</div>
+<!-- Login Card -->
+<div class="w-full bg-surface-container-high rounded-lg shadow-[0_10px_20px_-5px_rgba(77,96,128,0.08)] p-10 border border-outline-variant/10">
+<div class="text-center mb-8">
+<h1 class="font-headline-md text-headline-md text-primary mb-2">Panel de Control</h1>
+<p class="font-body-md text-on-surface-variant">Accede a la gestión de especialidad</p>
+</div>
+<form class="space-y-6" onsubmit="return false;">
+<!-- Email Field -->
+<div class="space-y-2">
+<label class="block font-label-md text-label-md text-on-surface-variant uppercase tracking-wider" for="email">
+                            Correo Electrónico
+                        </label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/60" data-icon="mail">mail</span>
+<input class="w-full pl-12 pr-4 py-4 bg-[#F5E6D3] border border-outline-variant/30 rounded-lg focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all font-body-md text-on-background placeholder:text-outline-variant" id="email" placeholder="nombre@rost.coffee" required="" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<div class="flex justify-between items-center">
+<label class="block font-label-md text-label-md text-on-surface-variant uppercase tracking-wider" for="password">
+                                Contraseña
+                            </label>
+<a class="font-label-md text-label-md text-primary hover:underline transition-all" href="#">
+                                Recuperar contraseña
+                            </a>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/60" data-icon="lock">lock</span>
+<input class="w-full pl-12 pr-12 py-4 bg-[#F5E6D3] border border-outline-variant/30 rounded-lg focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all font-body-md text-on-background placeholder:text-outline-variant" id="password" placeholder="••••••••" required="" type="password"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant/60 hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</div>
+<!-- Minimalist Validation Hint -->
+<div class="flex items-center gap-2 mt-2 opacity-0 transform translate-y-1 transition-all duration-300">
+<span class="material-symbols-outlined text-[16px] text-error" data-icon="error">error</span>
+<p class="font-label-md text-error text-[12px]">Credenciales no válidas</p>
+</div>
+</div>
+<!-- Action Button -->
+<div class="pt-2">
+<button class="w-full bg-primary-container text-on-primary py-4 rounded-lg font-label-md text-label-md uppercase tracking-[0.1em] shadow-lg shadow-primary-container/20 hover:bg-primary transition-all active:scale-[0.98] duration-150" type="submit">
+                            Iniciar Sesión
+                        </button>
+</div>
+<!-- Extra Help -->
+<div class="flex items-center gap-3 pt-4 justify-center">
+<span class="h-px bg-outline-variant/20 flex-grow"></span>
+<span class="font-label-md text-[12px] text-outline uppercase tracking-tighter">Acceso Protegido</span>
+<span class="h-px bg-outline-variant/20 flex-grow"></span>
+</div>
+</form>
+</div>
+<!-- Subtle Decorative Elements -->
+<div class="mt-8 flex gap-6 items-center text-on-surface-variant/40">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="verified_user">verified_user</span>
+<span class="font-label-md text-[11px] uppercase">Encription 256-bit</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="history">history</span>
+<span class="font-label-md text-[11px] uppercase">Registro de actividad</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Suppressed Shell: Footer stays minimal but keeps brand context as per hierarchy -->
+<footer class="w-full py-8 px-margin-mobile text-center">
+<p class="font-label-md text-[12px] text-on-surface-variant/60 tracking-wider">
+            © 2024 ROST Specialty Coffee. Crafted with intention.
+        </p>
+</footer>
+</body></html>
