@@ -30,72 +30,165 @@ def _seed_unidades_medida(session: Session):
 
 
 def _seed_categorias(session: Session):
-    if session.exec(select(Categoria).limit(1)).first():
-        return
+    existing = session.exec(select(Categoria).limit(1)).first()
+    if existing:
+        # Si ya existen pero son las viejas placeholder, las reemplazamos
+        old_names = {"Bebidas", "Lácteos", "Panadería"}
+        current_names = {existing.nombre}
+        if existing.nombre in old_names:
+            # Solo reemplazar si detectamos datos placeholder
+            for c in session.exec(select(Categoria)).all():
+                session.delete(c)
+            session.flush()
+        else:
+            return
     items = [
-        Categoria(nombre="Bebidas", descripcion="Bebidas en general"),
-        Categoria(nombre="Lácteos", descripcion="Productos lácteos"),
-        Categoria(nombre="Panadería", descripcion="Pan y productos de panadería"),
+        Categoria(nombre="Cafés", descripcion="Cafés de especialidad y espresso"),
+        Categoria(nombre="Bebidas", descripcion="Bebidas frías y otras preparaciones"),
+        Categoria(nombre="Pastelería", descripcion="Croissants y acompañamientos"),
     ]
     session.add_all(items)
     session.flush()
 
 
 def _seed_ingredientes(session: Session):
-    if session.exec(select(Ingrediente).limit(1)).first():
-        return
+    existing = session.exec(select(Ingrediente).limit(1)).first()
+    if existing:
+        old_ingredients = {"Harina", "Azúcar", "Leche", "Huevo", "Sal", "Mantequilla"}
+        if existing.nombre in old_ingredients:
+            for i in session.exec(select(Ingrediente)).all():
+                session.delete(i)
+            session.flush()
+        else:
+            return
     items = [
-        Ingrediente(nombre="Harina", descripcion="Harina de trigo"),
-        Ingrediente(nombre="Azúcar", descripcion="Azúcar refinada"),
+        Ingrediente(nombre="Café en grano", descripcion="Café de especialidad tostado"),
         Ingrediente(nombre="Leche", descripcion="Leche entera"),
-        Ingrediente(nombre="Huevo", descripcion="Huevo de gallina", es_alergeno=True),
-        Ingrediente(nombre="Sal", descripcion="Sal fina"),
+        Ingrediente(nombre="Dulce de leche", descripcion="Dulce de leche argentino"),
+        Ingrediente(nombre="Cacao", descripcion="Cacao en polvo"),
+        Ingrediente(nombre="Hielo", descripcion="Cubos de hielo"),
+        Ingrediente(nombre="Harina", descripcion="Harina de trigo", es_alergeno=True),
         Ingrediente(nombre="Mantequilla", descripcion="Mantequilla sin sal"),
+        Ingrediente(nombre="Huevo", descripcion="Huevo de gallina", es_alergeno=True),
     ]
     session.add_all(items)
     session.flush()
 
 
 def _seed_productos(session: Session):
-    if session.exec(select(Producto).limit(1)).first():
-        return
-    kg = session.exec(select(UnidadMedida).where(UnidadMedida.simbolo == "kg")).first()
-    l = session.exec(select(UnidadMedida).where(UnidadMedida.simbolo == "L")).first()
+    # Reemplazar productos placeholder si existen
+    existing = session.exec(select(Producto).limit(1)).first()
+    if existing:
+        old_products = {"Pan Francés", "Pastel de Chocolate", "Leche Entera 1L"}
+        if existing.nombre in old_products:
+            # Limpiar relaciones primero
+            for pc in session.exec(select(ProductoCategoria)).all():
+                session.delete(pc)
+            for pi in session.exec(select(ProductoIngrediente)).all():
+                session.delete(pi)
+            for p in session.exec(select(Producto)).all():
+                session.delete(p)
+            session.flush()
+        else:
+            return
+
     u = session.exec(select(UnidadMedida).where(UnidadMedida.simbolo == "u")).first()
     g = session.exec(select(UnidadMedida).where(UnidadMedida.simbolo == "g")).first()
-    panaderia = session.exec(select(Categoria).where(Categoria.nombre == "Panadería")).first()
-    lacteos = session.exec(select(Categoria).where(Categoria.nombre == "Lácteos")).first()
+    kg = session.exec(select(UnidadMedida).where(UnidadMedida.simbolo == "kg")).first()
+
+    cafes_cat = session.exec(select(Categoria).where(Categoria.nombre == "Cafés")).first()
+    bebidas_cat = session.exec(select(Categoria).where(Categoria.nombre == "Bebidas")).first()
+    pasteleria_cat = session.exec(select(Categoria).where(Categoria.nombre == "Pastelería")).first()
+
+    cafe_grano = session.exec(select(Ingrediente).where(Ingrediente.nombre == "Café en grano")).first()
+    leche = session.exec(select(Ingrediente).where(Ingrediente.nombre == "Leche")).first()
+    dlc = session.exec(select(Ingrediente).where(Ingrediente.nombre == "Dulce de leche")).first()
+    cacao = session.exec(select(Ingrediente).where(Ingrediente.nombre == "Cacao")).first()
+    hielo = session.exec(select(Ingrediente).where(Ingrediente.nombre == "Hielo")).first()
     harina = session.exec(select(Ingrediente).where(Ingrediente.nombre == "Harina")).first()
-    azucar = session.exec(select(Ingrediente).where(Ingrediente.nombre == "Azúcar")).first()
-    sal = session.exec(select(Ingrediente).where(Ingrediente.nombre == "Sal")).first()
+    mantequilla = session.exec(select(Ingrediente).where(Ingrediente.nombre == "Mantequilla")).first()
     huevo = session.exec(select(Ingrediente).where(Ingrediente.nombre == "Huevo")).first()
 
-    pan_frances = Producto(
-        nombre="Pan Francés", descripcion="Pan tradicional francés",
-        precio_base=2.50, stock_cantidad=50, disponible=True, unidad_venta_id=u.id,
+    # ── Productos ──────────────────────────────────────────
+    cafe_granos = Producto(
+        nombre="Café en granos",
+        descripcion="Café de especialidad tostado artesanalmente. Bolsa de 250g de granos seleccionados.",
+        precio_base=4500.00, stock_cantidad=30, disponible=True, unidad_venta_id=u.id,
+        imagenes_url=[
+            "https://thumbs.dreamstime.com/b/bolsitas-de-caf%C3%A9-generaci%C3%B3n-ia-los-granos-marr%C3%B3n-forman-un-fondo-denso-con-una-bolsa-papel-colocada-centralmente-en-la-parte-400978427.jpg"
+        ],
     )
-    pastel_chocolate = Producto(
-        nombre="Pastel de Chocolate", descripcion="Pastel con cobertura de chocolate",
-        precio_base=15.00, stock_cantidad=10, disponible=True, unidad_venta_id=u.id,
+    expresso = Producto(
+        nombre="Expresso cortado 120 ml",
+        descripcion="Café expresso cortado con un toque de leche. Intenso y suave a la vez.",
+        precio_base=1800.00, stock_cantidad=50, disponible=True, unidad_venta_id=u.id,
+        imagenes_url=[
+            "https://pedidosya.dhmedia.io/image/pedidosya/products/a9d7f79d-be5d-48d0-a45d-77ff453e84ae.jpg?quality=90&width=864&dpi=1.5"
+        ],
     )
-    leche_entera = Producto(
-        nombre="Leche Entera 1L", descripcion="Leche entera pasteurizada",
-        precio_base=1.20, stock_cantidad=100, disponible=True, unidad_venta_id=l.id,
+    ice_latte = Producto(
+        nombre="Ice latte 350 ml",
+        descripcion="Latte frío con hielo, perfecto para los días calurosos. Suave y refrescante.",
+        precio_base=2800.00, stock_cantidad=40, disponible=True, unidad_venta_id=u.id,
+        imagenes_url=[
+            "https://pedidosya.dhmedia.io/image/pedidosya/products/88483610-7726-4ddf-8af0-1f10869d49f7.jpg?quality=90&width=1008&webp=1"
+        ],
     )
-    session.add_all([pan_frances, pastel_chocolate, leche_entera])
+    mokaccino = Producto(
+        nombre="Mokaccino 350 ml",
+        descripcion="Café con chocolate y leche. Una combinación irresistible.",
+        precio_base=3000.00, stock_cantidad=40, disponible=True, unidad_venta_id=u.id,
+        imagenes_url=[
+            "https://pedidosya.dhmedia.io/image/pedidosya/products/94946615-5b77-4ee9-93b0-845594b7a220.jpg?quality=90&width=1008&webp=1"
+        ],
+    )
+    latte = Producto(
+        nombre="Latte 350 ml",
+        descripcion="Clásico latte con café espresso y leche cremosa. Suave y equilibrado.",
+        precio_base=2600.00, stock_cantidad=50, disponible=True, unidad_venta_id=u.id,
+        imagenes_url=[
+            "https://pedidosya.dhmedia.io/image/pedidosya/products/0d0b91c7-fdd9-4bfe-a24d-7e3754c5fdf4.jpg?quality=90&width=1008&webp=1"
+        ],
+    )
+    croissant = Producto(
+        nombre="Croissant de dulce de leche x2",
+        descripcion="Croissant artesanal relleno de dulce de leche. Dos unidades.",
+        precio_base=2200.00, stock_cantidad=25, disponible=True, unidad_venta_id=u.id,
+        imagenes_url=[
+            "https://pedidosya.dhmedia.io/image/pedidosya/products/51a450b9-7898-49f5-ab10-3df50209246c.jpg?quality=90&width=1008"
+        ],
+    )
+
+    session.add_all([cafe_granos, expresso, ice_latte, mokaccino, latte, croissant])
     session.flush()
 
+    # ── Categorías ─────────────────────────────────────────
     session.add_all([
-        ProductoCategoria(producto_id=pan_frances.id, categoria_id=panaderia.id, es_principal=True),
-        ProductoCategoria(producto_id=pastel_chocolate.id, categoria_id=panaderia.id, es_principal=True),
-        ProductoCategoria(producto_id=leche_entera.id, categoria_id=lacteos.id, es_principal=True),
+        ProductoCategoria(producto_id=cafe_granos.id, categoria_id=cafes_cat.id, es_principal=True),
+        ProductoCategoria(producto_id=expresso.id, categoria_id=cafes_cat.id, es_principal=True),
+        ProductoCategoria(producto_id=mokaccino.id, categoria_id=cafes_cat.id, es_principal=True),
+        ProductoCategoria(producto_id=latte.id, categoria_id=cafes_cat.id, es_principal=True),
+        ProductoCategoria(producto_id=ice_latte.id, categoria_id=bebidas_cat.id, es_principal=True),
+        ProductoCategoria(producto_id=croissant.id, categoria_id=pasteleria_cat.id, es_principal=True),
     ])
+
+    # ── Ingredientes ───────────────────────────────────────
     session.add_all([
-        ProductoIngrediente(producto_id=pan_frances.id, ingrediente_id=harina.id, cantidad=0.500, unidad_medida_id=kg.id, es_removible=False),
-        ProductoIngrediente(producto_id=pan_frances.id, ingrediente_id=sal.id, cantidad=10.000, unidad_medida_id=g.id, es_removible=False),
-        ProductoIngrediente(producto_id=pastel_chocolate.id, ingrediente_id=harina.id, cantidad=0.300, unidad_medida_id=kg.id, es_removible=False),
-        ProductoIngrediente(producto_id=pastel_chocolate.id, ingrediente_id=azucar.id, cantidad=0.200, unidad_medida_id=kg.id, es_removible=False),
-        ProductoIngrediente(producto_id=pastel_chocolate.id, ingrediente_id=huevo.id, cantidad=4.000, unidad_medida_id=u.id, es_removible=True),
+        ProductoIngrediente(producto_id=cafe_granos.id, ingrediente_id=cafe_grano.id, cantidad=250.000, unidad_medida_id=g.id, es_removible=False),
+        ProductoIngrediente(producto_id=expresso.id, ingrediente_id=cafe_grano.id, cantidad=18.000, unidad_medida_id=g.id, es_removible=False),
+        ProductoIngrediente(producto_id=expresso.id, ingrediente_id=leche.id, cantidad=30.000, unidad_medida_id=g.id, es_removible=False),
+        ProductoIngrediente(producto_id=ice_latte.id, ingrediente_id=cafe_grano.id, cantidad=18.000, unidad_medida_id=g.id, es_removible=False),
+        ProductoIngrediente(producto_id=ice_latte.id, ingrediente_id=leche.id, cantidad=200.000, unidad_medida_id=g.id, es_removible=True),
+        ProductoIngrediente(producto_id=ice_latte.id, ingrediente_id=hielo.id, cantidad=6.000, unidad_medida_id=u.id, es_removible=False),
+        ProductoIngrediente(producto_id=mokaccino.id, ingrediente_id=cafe_grano.id, cantidad=18.000, unidad_medida_id=g.id, es_removible=False),
+        ProductoIngrediente(producto_id=mokaccino.id, ingrediente_id=leche.id, cantidad=200.000, unidad_medida_id=g.id, es_removible=True),
+        ProductoIngrediente(producto_id=mokaccino.id, ingrediente_id=cacao.id, cantidad=15.000, unidad_medida_id=g.id, es_removible=False),
+        ProductoIngrediente(producto_id=latte.id, ingrediente_id=cafe_grano.id, cantidad=18.000, unidad_medida_id=g.id, es_removible=False),
+        ProductoIngrediente(producto_id=latte.id, ingrediente_id=leche.id, cantidad=200.000, unidad_medida_id=g.id, es_removible=True),
+        ProductoIngrediente(producto_id=croissant.id, ingrediente_id=harina.id, cantidad=100.000, unidad_medida_id=g.id, es_removible=False),
+        ProductoIngrediente(producto_id=croissant.id, ingrediente_id=mantequilla.id, cantidad=50.000, unidad_medida_id=g.id, es_removible=False),
+        ProductoIngrediente(producto_id=croissant.id, ingrediente_id=dlc.id, cantidad=40.000, unidad_medida_id=g.id, es_removible=False),
+        ProductoIngrediente(producto_id=croissant.id, ingrediente_id=huevo.id, cantidad=1.000, unidad_medida_id=u.id, es_removible=False),
     ])
 
 
