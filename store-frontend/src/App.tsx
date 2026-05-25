@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import CartPage from "./pages/CartPage";
 import OrdersPage from "./pages/OrdersPage";
@@ -20,6 +21,7 @@ export default function App() {
               <>
                 <Navbar />
                 <HomePage />
+                <Footer />
               </>
             }
           />
@@ -29,6 +31,7 @@ export default function App() {
               <>
                 <Navbar />
                 <CartPage />
+                <Footer />
               </>
             }
           />
@@ -38,6 +41,7 @@ export default function App() {
               <>
                 <Navbar />
                 <OrdersPage />
+                <Footer />
               </>
             }
           />
@@ -47,6 +51,7 @@ export default function App() {
               <>
                 <Navbar />
                 <DireccionesPage />
+                <Footer />
               </>
             }
           />
@@ -56,6 +61,7 @@ export default function App() {
               <>
                 <Navbar />
                 <ProfilePage />
+                <Footer />
               </>
             }
           />

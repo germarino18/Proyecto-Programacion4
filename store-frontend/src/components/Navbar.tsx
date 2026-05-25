@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useCartStore } from "../store/cartStore";
 import { useAuth } from "../context/AuthContext";
@@ -9,6 +10,7 @@ export default function Navbar() {
     s.items.reduce((acc, i) => acc + i.cantidad, 0)
   );
   const { usuario } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -19,13 +21,16 @@ export default function Navbar() {
     }
   };
 
+  const closeMenu = () => setIsMenuOpen(false);
+
   return (
-    <nav className="sticky top-0 z-50 bg-surface shadow-sm h-20">
-      <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
+    <nav className="sticky top-0 z-50 bg-surface shadow-sm">
+      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         <Link to="/" className="flex items-center">
           <img src="/logo.png" alt="ROST" className="h-12" />
         </Link>
 
+        {/* Desktop search */}
         <div className="hidden md:flex flex-1 max-w-md mx-8">
           <div className="relative w-full">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg pointer-events-none">
@@ -49,7 +54,8 @@ export default function Navbar() {
           </div>
         </div>
 
-        <div className="flex items-center gap-6">
+        {/* Desktop links */}
+        <div className="hidden md:flex items-center gap-6">
           <Link
             to="/"
             className="font-body text-body-md text-on-surface-variant hover:text-primary transition-colors"
@@ -79,11 +85,11 @@ export default function Navbar() {
           >
             {usuario ? (
               <>
-                <span className="hidden md:block font-body text-body-md text-on-surface-variant hover:text-primary transition-colors">
+                <span className="font-body text-body-md text-on-surface-variant hover:text-primary transition-colors">
                   {usuario.nombre}
                 </span>
                 <div className="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center text-white text-sm font-bold">
-                  {usuario.nombre?.charAt(0).toUpperCase() ?? 'U'}
+                  {usuario.nombre?.charAt(0).toUpperCase() ?? "U"}
                 </div>
               </>
             ) : (
@@ -95,7 +101,65 @@ export default function Navbar() {
             )}
           </Link>
         </div>
+
+        {/* Mobile: cart + avatar + hamburger */}
+        <div className="flex md:hidden items-center gap-2">
+          <Link to="/carrito" className="relative p-1">
+            <span className="material-symbols-outlined text-on-surface text-2xl">
+              shopping_cart
+            </span>
+            {totalItems > 0 && (
+              <span className="absolute -top-1 -right-1 bg-tertiary text-on-tertiary text-xs rounded-full min-w-[20px] h-5 flex items-center justify-center font-bold px-1">
+                {totalItems}
+              </span>
+            )}
+          </Link>
+          <Link to="/perfil" title="Mi perfil">
+            {usuario ? (
+              <div className="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center text-white text-sm font-bold">
+                {usuario.nombre?.charAt(0).toUpperCase() ?? "U"}
+              </div>
+            ) : (
+              <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                <span className="material-symbols-outlined text-primary text-lg">
+                  person
+                </span>
+              </div>
+            )}
+          </Link>
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="p-1 text-on-surface hover:text-primary transition-colors"
+            aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
+          >
+            <span className="material-symbols-outlined text-2xl">
+              {isMenuOpen ? "close" : "menu"}
+            </span>
+          </button>
+        </div>
       </div>
+
+      {/* Mobile menu dropdown */}
+      {isMenuOpen && (
+        <div className="md:hidden bg-surface border-t border-outline-variant/30 shadow-lg">
+          <div className="px-6 py-4 space-y-1">
+            <Link
+              to="/"
+              onClick={closeMenu}
+              className="block font-body text-body-md text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors rounded-lg px-3 py-2.5"
+            >
+              Tienda
+            </Link>
+            <Link
+              to="/mis-pedidos"
+              onClick={closeMenu}
+              className="block font-body text-body-md text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors rounded-lg px-3 py-2.5"
+            >
+              Mis Pedidos
+            </Link>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
