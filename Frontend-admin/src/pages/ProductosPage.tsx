@@ -183,13 +183,18 @@ export default function ProductosPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <input
-          type="text"
-          placeholder="Buscar productos..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="bg-[#F5E6D3] border border-outline-variant rounded-lg px-4 py-2.5 text-on-surface w-72 font-body text-sm placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary-container"
-        />
+        <div className="relative">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/60">
+            <span className="material-symbols-outlined text-[18px]">search</span>
+          </span>
+          <input
+            type="text"
+            placeholder="Buscar productos..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="bg-[#F5E6D3] border border-outline-variant rounded-lg pl-9 pr-4 py-2.5 text-on-surface w-72 font-body text-sm placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary-container"
+          />
+        </div>
         <button
           onClick={openCreate}
           className="flex items-center gap-2 bg-primary-container text-on-primary rounded-lg px-5 py-2.5 font-body font-semibold text-sm hover:opacity-90 transition-opacity"
@@ -218,11 +223,39 @@ export default function ProductosPage() {
             </thead>
             <tbody className="divide-y divide-outline-variant/10">
               {productos?.map((p) => (
-                <tr key={p.id} className="hover:bg-primary/5 transition-colors">
+                <tr key={p.id} className="hover:bg-surface-container-high/50 transition-colors">
                   <td className="px-6 py-4">
-                    <Link to={`/admin/productos/${p.id}`} className="font-body font-semibold text-primary hover:underline">
-                      {p.nombre}
-                    </Link>
+                    <div className="flex items-center gap-3">
+                      {p.imagenes_url?.[0] ? (
+                        <img
+                          src={p.imagenes_url[0]}
+                          alt=""
+                          className="w-8 h-8 rounded object-cover border border-outline-variant/20"
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                        />
+                      ) : (
+                        <div className="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center">
+                          <span className="material-symbols-outlined text-[16px] text-on-surface-variant">coffee</span>
+                        </div>
+                      )}
+                      <div className="flex flex-col">
+                        <Link to={`/admin/productos/${p.id}`} className="font-body font-semibold text-primary hover:underline">
+                          {p.nombre}
+                        </Link>
+                        {p.categorias && p.categorias.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mt-0.5">
+                            {p.categorias.slice(0, 2).map((pc) => (
+                              <span key={pc.categoria_id} className="px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full text-[10px] font-semibold">
+                                {pc.categoria?.nombre ?? `#${pc.categoria_id}`}
+                              </span>
+                            ))}
+                            {p.categorias.length > 2 && (
+                              <span className="text-[10px] text-on-surface-variant">+{p.categorias.length - 2}</span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </td>
                   <td className="px-6 py-4 font-body text-on-surface-variant">
                     ${p.precio_base.toFixed(2)}

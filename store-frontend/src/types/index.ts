@@ -101,3 +101,10 @@ export interface FormaPago {
   id: number;
   nombre: string;
 }
+
+export interface UsuarioAuth {
+  id: number;
+  email: string;
+  nombre: string;
+  activo: boolean;
+}

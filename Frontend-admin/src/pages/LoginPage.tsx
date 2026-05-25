@@ -25,50 +25,74 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#ffeddb]">
-      <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-sm">
+    <div className="min-h-screen flex items-center justify-center bg-[#FFEDDB]">
+      <div className="bg-surface-container-high rounded-lg shadow-[0_10px_20px_-5px_rgba(77,96,128,0.08)] p-10 border border-outline-variant/10 w-full max-w-[440px]">
         <div className="text-center mb-8">
-          <img src="/logo2.png" alt="ROST" className="h-12 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-[#354867]">Admin ROST</h2>
-          <p className="text-gray-500 text-sm mt-1">Iniciar sesión</p>
+          <img src="/logo2.png" alt="ROST" className="h-14 mx-auto mb-6" />
+          <h2 className="font-headline text-2xl font-bold text-primary">Panel de Control</h2>
+          <p className="font-body text-on-surface-variant text-sm mt-1">Accede a la gestión de especialidad</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
+            <label className="block font-body text-xs font-semibold text-on-surface-variant uppercase tracking-[0.08em] mb-1.5">
               Email
             </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-[#c8a97e]"
-            />
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/60">
+                <span className="material-symbols-outlined text-[18px]">mail</span>
+              </span>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full bg-[#F5E6D3] border border-outline-variant rounded-lg pl-9 pr-4 py-3 text-on-surface font-body text-sm placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary-container"
+              />
+            </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
+            <label className="block font-body text-xs font-semibold text-on-surface-variant uppercase tracking-[0.08em] mb-1.5">
               Contraseña
             </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-[#c8a97e]"
-            />
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/60">
+                <span className="material-symbols-outlined text-[18px]">lock</span>
+              </span>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full bg-[#F5E6D3] border border-outline-variant rounded-lg pl-9 pr-4 py-3 text-on-surface font-body text-sm placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary-container"
+              />
+            </div>
           </div>
           {error && (
-            <p className="text-red-500 text-sm text-center">{error}</p>
+            <div className="flex items-center gap-2 bg-error-container text-on-error-container px-4 py-3 rounded-lg text-sm font-body">
+              <span className="material-symbols-outlined text-[18px]">error</span>
+              {error}
+            </div>
           )}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#354867] text-white py-2.5 rounded-lg font-medium hover:bg-[#2a3a52] transition-colors disabled:bg-gray-300"
+            className="w-full bg-[#4d6080] text-[#ffffff] py-4 rounded-lg font-body font-semibold uppercase tracking-[0.1em] text-sm hover:opacity-90 transition-all disabled:opacity-50"
           >
             {loading ? 'Ingresando...' : 'Ingresar'}
           </button>
+          <div className="text-center">
+            <a href="#" className="font-body text-xs text-primary hover:text-primary-container transition-colors">
+              Recuperar contraseña
+            </a>
+          </div>
         </form>
+
+        <div className="flex items-center gap-3 mt-8">
+          <div className="flex-1 h-px bg-outline-variant/30" />
+          <span className="font-body text-[11px] text-on-surface-variant/50 uppercase tracking-[0.15em]">Acceso Protegido</span>
+          <div className="flex-1 h-px bg-outline-variant/30" />
+        </div>
       </div>
     </div>
   );

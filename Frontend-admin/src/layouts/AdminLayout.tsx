@@ -28,20 +28,20 @@ export default function AdminLayout() {
 
   return (
     <div className="flex min-h-screen">
-      <aside className="flex flex-col h-screen w-64 bg-[#354867] text-white flex-shrink-0">
-        <div className="px-6 py-8">
+      <aside className="flex flex-col h-screen w-64 bg-surface-container border-r border-outline-variant/20 flex-shrink-0">
+        <div className="px-6 py-8 border-b border-outline-variant/10 flex justify-center">
           <img src="/logo2.png" alt="ROST" className="h-14" />
         </div>
-        <nav className="flex-1 space-y-1 px-3">
+        <nav className="flex-1 space-y-0.5 px-3 py-4">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                `flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors font-body text-sm ${
                   isActive
-                    ? 'bg-white/15 text-white font-semibold'
-                    : 'text-white/70 hover:bg-white/10 hover:text-white'
+                    ? 'bg-[#4d6080] text-white font-semibold shadow-sm'
+                    : 'text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface'
                 }`
               }
             >
@@ -50,26 +50,32 @@ export default function AdminLayout() {
             </NavLink>
           ))}
         </nav>
-        <div className="border-t border-white/10 px-4 py-4 space-y-2">
+        <div className="border-t border-outline-variant/10 px-4 py-4 space-y-3">
           {usuario && (
-            <div className="text-xs text-white/70">
-              <p className="font-semibold text-white/90">{usuario.nombre}</p>
-              <p>{usuario.email}</p>
-              <p className="mt-1">
-                Roles: {usuario.roles?.map((r) => r.rol_codigo).join(', ')}
-              </p>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#4d6080] flex items-center justify-center text-white text-xs font-bold uppercase">
+                {usuario.nombre?.charAt(0) ?? 'U'}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-body text-sm font-semibold text-on-surface truncate">{usuario.nombre}</p>
+                <p className="font-body text-xs text-on-surface-variant truncate">{usuario.email}</p>
+              </div>
             </div>
           )}
           <button
             onClick={handleLogout}
-            className="text-xs text-white/50 hover:text-white transition-colors w-full text-left"
+            className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm text-on-surface-variant hover:bg-surface-container-high hover:text-error transition-colors font-body"
           >
+            <span className="material-symbols-outlined text-[18px]">logout</span>
             Cerrar sesión
           </button>
-          <span className="block text-xs text-white/30">ROST Admin v2.0</span>
+          <div className="flex items-center gap-2 px-3 pt-1">
+            <span className="material-symbols-outlined text-[14px] text-on-surface-variant/50">settings</span>
+            <span className="font-body text-[11px] text-on-surface-variant/50">ROST Admin v2.0</span>
+          </div>
         </div>
       </aside>
-      <main className="flex-1 overflow-y-auto" style={{ backgroundColor: '#ffeddb' }}>
+      <main className="flex-1 h-screen overflow-y-auto bg-[#FFEDDB]">
         <div className="p-6">
           <header className="mb-8">
             <h2 className="font-headline text-3xl font-bold text-primary">{currentTitle}</h2>

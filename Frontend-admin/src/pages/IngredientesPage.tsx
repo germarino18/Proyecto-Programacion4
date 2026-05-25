@@ -81,22 +81,35 @@ export default function IngredientesPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <input
-            type="text"
-            placeholder="Buscar ingredientes..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="bg-[#F5E6D3] border border-outline-variant rounded-lg px-4 py-2.5 text-on-surface w-64 font-body text-sm placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary-container"
-          />
-          <select
-            value={filterAlergeno}
-            onChange={(e) => setFilterAlergeno(e.target.value)}
-            className="bg-[#F5E6D3] border border-outline-variant rounded-lg px-3 py-2.5 text-on-surface font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary-container"
-          >
-            <option value="">Todos</option>
-            <option value="true">Alérgeno</option>
-            <option value="false">No alérgeno</option>
-          </select>
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/60">
+              <span className="material-symbols-outlined text-[18px]">search</span>
+            </span>
+            <input
+              type="text"
+              placeholder="Buscar ingredientes..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="bg-[#F5E6D3] border border-outline-variant rounded-lg pl-9 pr-4 py-2.5 text-on-surface w-64 font-body text-sm placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary-container"
+            />
+          </div>
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/60 pointer-events-none">
+              <span className="material-symbols-outlined text-[18px]">filter_list</span>
+            </span>
+            <select
+              value={filterAlergeno}
+              onChange={(e) => setFilterAlergeno(e.target.value)}
+              className="bg-[#F5E6D3] border border-outline-variant rounded-lg pl-9 pr-8 py-2.5 text-on-surface font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary-container appearance-none"
+            >
+              <option value="">Todos</option>
+              <option value="true">Alérgeno</option>
+              <option value="false">No alérgeno</option>
+            </select>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant/60 pointer-events-none">
+              <span className="material-symbols-outlined text-[16px]">expand_more</span>
+            </span>
+          </div>
         </div>
         <button
           onClick={openCreate}
@@ -125,16 +138,29 @@ export default function IngredientesPage() {
             </thead>
             <tbody className="divide-y divide-outline-variant/10">
               {ingredientes?.map((item) => (
-                <tr key={item.id} className="hover:bg-primary/5 transition-colors">
-                  <td className="px-6 py-4 font-body font-semibold text-primary">{item.nombre}</td>
+                <tr key={item.id} className="hover:bg-surface-container-high/50 transition-colors">
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-primary-fixed flex items-center justify-center">
+                        <span className="material-symbols-outlined text-[18px] text-primary">
+                          {item.es_alergeno ? 'warning' : 'liquor'}
+                        </span>
+                      </div>
+                      <span className="font-body font-semibold text-primary">{item.nombre}</span>
+                    </div>
+                  </td>
                   <td className="px-6 py-4 font-body text-on-surface-variant">{item.descripcion ?? '—'}</td>
                   <td className="px-6 py-4">
                     {item.es_alergeno ? (
-                      <span className="px-2.5 py-1 bg-error-container text-on-error-container rounded-full text-xs font-bold uppercase tracking-wider">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-error-container text-on-error-container rounded-full text-xs font-bold uppercase tracking-wider">
+                        <span className="material-symbols-outlined text-[14px]">warning</span>
                         Alérgeno
                       </span>
                     ) : (
-                      <span className="text-on-surface-variant text-sm">—</span>
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-surface-container-high text-on-surface-variant rounded-full text-xs font-semibold">
+                        <span className="material-symbols-outlined text-[14px]">check_circle</span>
+                        Seguro
+                      </span>
                     )}
                   </td>
                   <td className="px-6 py-4">

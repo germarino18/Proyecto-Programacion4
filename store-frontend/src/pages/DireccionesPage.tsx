@@ -42,110 +42,117 @@ export default function DireccionesPage() {
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-[#354867]">
-          Mis Direcciones
-        </h2>
+    <div className="max-w-3xl mx-auto px-6 py-12">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h2 className="font-headline text-headline-md text-primary">Mis Direcciones</h2>
+          <p className="font-body text-body-md text-on-surface-variant mt-1">Gestioná tus direcciones de entrega</p>
+        </div>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="bg-[#c8a97e] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#b8966a]"
+          className="flex items-center gap-2 bg-primary text-on-primary px-5 py-2.5 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all"
         >
-          {showForm ? "Cancelar" : "+ Nueva"}
+          <span className="material-symbols-outlined text-[18px]">{showForm ? 'close' : 'add'}</span>
+          {showForm ? 'Cancelar' : 'Nueva Dirección'}
         </button>
       </div>
 
       {showForm && (
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-xl p-6 shadow-sm mb-6 space-y-4"
+          className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 p-6 mb-8 space-y-4"
         >
           <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              Alias
-            </label>
+            <label className="block font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-1.5">Alias</label>
             <input
               type="text"
               value={alias}
               onChange={(e) => setAlias(e.target.value)}
               placeholder="Casa, Trabajo, etc."
               required
-              className="w-full border border-gray-300 rounded-lg p-2.5"
+              className="w-full bg-[#F5E6D3] border border-outline-variant rounded-lg px-4 py-2.5 text-on-surface font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary-container placeholder:text-on-surface-variant/50"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              Dirección
-            </label>
+            <label className="block font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-1.5">Dirección</label>
             <input
               type="text"
               value={direccion}
               onChange={(e) => setDireccion(e.target.value)}
               placeholder="Calle y número"
               required
-              className="w-full border border-gray-300 rounded-lg p-2.5"
+              className="w-full bg-[#F5E6D3] border border-outline-variant rounded-lg px-4 py-2.5 text-on-surface font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary-container placeholder:text-on-surface-variant/50"
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">
-                Ciudad
-              </label>
+              <label className="block font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-1.5">Ciudad</label>
               <input
                 type="text"
                 value={ciudad}
                 onChange={(e) => setCiudad(e.target.value)}
                 required
-                className="w-full border border-gray-300 rounded-lg p-2.5"
+                className="w-full bg-[#F5E6D3] border border-outline-variant rounded-lg px-4 py-2.5 text-on-surface font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary-container placeholder:text-on-surface-variant/50"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">
-                Región
-              </label>
+              <label className="block font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-1.5">Región</label>
               <input
                 type="text"
                 value={region}
                 onChange={(e) => setRegion(e.target.value)}
                 required
-                className="w-full border border-gray-300 rounded-lg p-2.5"
+                className="w-full bg-[#F5E6D3] border border-outline-variant rounded-lg px-4 py-2.5 text-on-surface font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary-container placeholder:text-on-surface-variant/50"
               />
             </div>
           </div>
           <button
             type="submit"
             disabled={crearMutation.isPending}
-            className="w-full bg-green-600 text-white py-2 rounded-lg font-medium hover:bg-green-700 disabled:bg-gray-300"
+            className="w-full bg-primary-container text-on-primary py-3 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all disabled:opacity-50"
           >
-            {crearMutation.isPending ? "Guardando..." : "Guardar dirección"}
+            {crearMutation.isPending ? "Guardando..." : "Guardar Dirección"}
           </button>
         </form>
       )}
 
       <div className="space-y-3">
-        {direcciones?.map((d) => (
-          <div
-            key={d.id}
-            className="bg-white rounded-xl p-4 shadow-sm border border-gray-200 flex justify-between items-center"
-          >
-            <div>
-              <p className="font-semibold text-[#354867]">{d.alias}</p>
-              <p className="text-sm text-gray-500">
-                {d.direccion}, {d.ciudad}
-              </p>
-            </div>
-            <button
-              onClick={() => eliminarMutation.mutate(d.id)}
-              className="text-red-400 hover:text-red-600 text-sm"
+        {direcciones && direcciones.length > 0 ? (
+          direcciones.map((d) => (
+            <div
+              key={d.id}
+              className="flex items-center justify-between bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant/10 hover:shadow-md transition-all group"
             >
-              Eliminar
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-primary text-[20px]">home</span>
+                </div>
+                <div>
+                  <p className="font-body font-semibold text-on-surface">{d.alias}</p>
+                  <p className="font-body text-sm text-on-surface-variant">{d.direccion}, {d.ciudad}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => eliminarMutation.mutate(d.id)}
+                className="flex items-center gap-1 text-on-surface-variant/50 hover:text-error transition-colors font-body text-sm opacity-0 group-hover:opacity-100"
+              >
+                <span className="material-symbols-outlined text-[18px]">delete</span>
+                Eliminar
+              </button>
+            </div>
+          ))
+        ) : (
+          <div className="text-center py-16">
+            <span className="material-symbols-outlined text-5xl text-on-surface-variant/30 mb-4">map</span>
+            <p className="font-body text-body-md text-on-surface-variant">No tenés direcciones guardadas</p>
+            <button
+              onClick={() => setShowForm(true)}
+              className="mt-4 text-primary font-label-md text-label-md hover:underline inline-flex items-center gap-1"
+            >
+              <span className="material-symbols-outlined text-[16px]">add</span>
+              Agregá tu primera dirección
             </button>
           </div>
-        ))}
-        {(!direcciones || direcciones.length === 0) && (
-          <p className="text-gray-400 text-center py-8">
-            No tenés direcciones guardadas
-          </p>
         )}
       </div>
     </div>

@@ -81,13 +81,18 @@ export default function CategoriasPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <input
-          type="text"
-          placeholder="Buscar categorías..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="bg-[#F5E6D3] border border-outline-variant rounded-lg px-4 py-2.5 text-on-surface w-72 font-body text-sm placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary-container"
-        />
+        <div className="relative">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/60">
+            <span className="material-symbols-outlined text-[18px]">search</span>
+          </span>
+          <input
+            type="text"
+            placeholder="Buscar categorías..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="bg-[#F5E6D3] border border-outline-variant rounded-lg pl-9 pr-4 py-2.5 text-on-surface w-72 font-body text-sm placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary-container"
+          />
+        </div>
         <button
           onClick={openCreate}
           className="flex items-center gap-2 bg-primary-container text-on-primary rounded-lg px-5 py-2.5 font-body font-semibold text-sm hover:opacity-90 transition-opacity"
@@ -115,10 +120,26 @@ export default function CategoriasPage() {
             </thead>
             <tbody className="divide-y divide-outline-variant/10">
               {categorias?.map((item) => (
-                <tr key={item.id} className="hover:bg-primary/5 transition-colors">
-                  <td className="px-6 py-4 font-body font-semibold text-primary">{item.nombre}</td>
+                <tr key={item.id} className="hover:bg-surface-container-high/50 transition-colors">
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center">
+                        <span className="material-symbols-outlined text-[18px] text-primary">category</span>
+                      </div>
+                      <span className="font-body font-semibold text-primary">{item.nombre}</span>
+                    </div>
+                  </td>
                   <td className="px-6 py-4 font-body text-on-surface-variant">{item.descripcion ?? '—'}</td>
-                  <td className="px-6 py-4 font-body text-on-surface-variant">{getParentName(item.parent_id)}</td>
+                  <td className="px-6 py-4">
+                    {item.parent_id ? (
+                      <span className="inline-flex items-center px-2.5 py-1 bg-surface-container-high text-on-surface-variant rounded-full text-xs font-semibold">
+                        <span className="material-symbols-outlined text-[14px] mr-1">subdirectory_arrow_right</span>
+                        {getParentName(item.parent_id)}
+                      </span>
+                    ) : (
+                      <span className="text-on-surface-variant text-sm">—</span>
+                    )}
+                  </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
                       <button
