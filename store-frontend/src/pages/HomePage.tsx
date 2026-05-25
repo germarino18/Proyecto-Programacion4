@@ -8,9 +8,9 @@ import type { Producto } from "../types";
 
 export default function HomePage() {
   const addItem = useCartStore((s) => s.addItem);
-  const [selectedCategoriaId, setSelectedCategoriaId] = useState<number | null>(null);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("search") ?? "";
+  const [selectedCategoriaId, setSelectedCategoriaId] = useState<number | null>(null);
 
   const { data: productos, isLoading } = useQuery<Producto[]>({
     queryKey: ["productos"],
@@ -34,8 +34,8 @@ export default function HomePage() {
     addItem(producto);
   };
 
-  // Filtrar productos por categoría seleccionada y/o búsqueda
-  let productosFiltrados = productos;
+  // Filtrar productos: solo disponibles + por categoría y/o búsqueda
+  let productosFiltrados = productos?.filter((p) => p.disponible);
   if (selectedCategoriaId) {
     productosFiltrados = productosFiltrados?.filter((p) =>
       p.categorias?.some((c) => c.categoria_id === selectedCategoriaId)
@@ -54,20 +54,40 @@ export default function HomePage() {
     <div>
       {/* Hero */}
       <section className="relative bg-surface-container overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10" />
-        <div className="relative max-w-7xl mx-auto px-6 py-16 md:py-20 text-center">
-          <img src="/logo2.png" alt="ROST" className="h-20 md:h-24 mx-auto mb-6" />
-          <h1 className="font-headline text-headline-lg text-primary font-bold mb-4 max-w-3xl mx-auto">
-            El ritual del café, elevado a su máxima expresión
-          </h1>
-          <p className="font-body text-body-md text-on-surface-variant max-w-xl mx-auto">
-            Seleccioná tus productos y armá tu pedido
-          </p>
-        </div>
+        <img src="public/banner.png" alt="ROSTBanner"/>
       </section>
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Search bar mobile */}
+        <div className="relative w-full md:hidden mb-6">
+          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg pointer-events-none">
+            search
+          </span>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value.trim()) {
+                setSearchParams({ search: value.trim() }, { replace: true });
+              } else {
+                setSearchParams({}, { replace: true });
+              }
+            }}
+            placeholder="Buscar productos..."
+            className="w-full bg-surface-container-low rounded-lg pl-10 pr-10 py-2.5 font-body text-body-md text-on-surface placeholder:text-on-surface-variant/60 border-none outline-none focus:ring-2 focus:ring-primary/30"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchParams({}, { replace: true })}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-on-surface-variant/50 hover:text-on-surface transition-colors p-1"
+            >
+              <span className="material-symbols-outlined text-lg">close</span>
+            </button>
+          )}
+        </div>
+
         {/* Categorías */}
         {categorias && Array.isArray(categorias) && categorias.length > 0 && (
           <div className="flex gap-2 mb-8 flex-wrap">

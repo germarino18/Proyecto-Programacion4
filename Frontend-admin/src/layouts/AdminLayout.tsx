@@ -30,7 +30,7 @@ export default function AdminLayout() {
     <div className="flex min-h-screen">
       <aside className="flex flex-col h-screen w-64 bg-surface-container border-r border-outline-variant/20 flex-shrink-0">
         <div className="px-6 py-8 border-b border-outline-variant/10 flex justify-center">
-          <img src="/logo2.png" alt="ROST" className="h-14" />
+          <img src="/logo.png" alt="ROST" className="h-14" />
         </div>
         <nav className="flex-1 space-y-0.5 px-3 py-4">
           {navItems.map((item) => (
@@ -70,7 +70,6 @@ export default function AdminLayout() {
             Cerrar sesión
           </button>
           <div className="flex items-center gap-2 px-3 pt-1">
-            <span className="material-symbols-outlined text-[14px] text-on-surface-variant/50">settings</span>
             <span className="font-body text-[11px] text-on-surface-variant/50">ROST Admin v2.0</span>
           </div>
         </div>
