@@ -5,11 +5,14 @@ import { getProductos, createProducto, updateProducto, deleteProducto } from '..
 import { getCategorias } from '../api/categorias';
 import { getIngredientes } from '../api/ingredientes';
 import { getUnidadesMedida } from '../api/unidadesMedida';
+import { useAuth } from '../context/AuthContext';
 import Modal from '../components/Modal';
 import type { Producto, ProductoCreate, ProductoUpdate } from '../types';
 
 export default function ProductosPage() {
   const queryClient = useQueryClient();
+  const { hasRole } = useAuth();
+  const isAdmin = hasRole('ADMIN');
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [search, setSearch] = useState('');
@@ -195,13 +198,15 @@ export default function ProductosPage() {
             className="bg-[#F5E6D3] border border-outline-variant rounded-lg pl-9 pr-4 py-2.5 text-on-surface w-72 font-body text-sm placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary-container"
           />
         </div>
-        <button
-          onClick={openCreate}
-          className="flex items-center gap-2 bg-primary-container text-on-primary rounded-lg px-5 py-2.5 font-body font-semibold text-sm hover:opacity-90 transition-opacity"
-        >
-          <span className="material-symbols-outlined text-[18px]">add</span>
-          Nuevo Producto
-        </button>
+        {isAdmin && (
+          <button
+            onClick={openCreate}
+            className="flex items-center gap-2 bg-primary-container text-on-primary rounded-lg px-5 py-2.5 font-body font-semibold text-sm hover:opacity-90 transition-opacity"
+          >
+            <span className="material-symbols-outlined text-[18px]">add</span>
+            Nuevo Producto
+          </button>
+        )}
       </div>
 
       {isLoading ? (
@@ -287,13 +292,15 @@ export default function ProductosPage() {
                       >
                         <span className="material-symbols-outlined text-[20px]">edit</span>
                       </button>
-                      <button
-                        onClick={() => { if (confirm('¿Eliminar este producto?')) deleteMutation.mutate(p.id); }}
-                        className="text-error hover:text-red-400 transition-colors p-1"
-                        title="Eliminar"
-                      >
-                        <span className="material-symbols-outlined text-[20px]">delete</span>
-                      </button>
+                      {isAdmin && (
+                        <button
+                          onClick={() => { if (confirm('¿Eliminar este producto?')) deleteMutation.mutate(p.id); }}
+                          className="text-error hover:text-red-400 transition-colors p-1"
+                          title="Eliminar"
+                        >
+                          <span className="material-symbols-outlined text-[20px]">delete</span>
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>

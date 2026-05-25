@@ -107,4 +107,5 @@ export interface UsuarioAuth {
   email: string;
   nombre: string;
   activo: boolean;
+  roles?: { rol_codigo: string; rol?: { codigo: string; descripcion: string } }[];
 }

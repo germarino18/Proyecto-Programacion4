@@ -12,6 +12,12 @@ from app.schemas.admin import AdminUserRead, AdminUserUpdate, AdminRolAsignar
 router = APIRouter(prefix="/api/v1/admin", tags=["Admin"])
 
 
+@router.get("/roles")
+def listar_roles(session: Session = Depends(get_session)):
+    roles = session.exec(select(Rol)).all()
+    return roles
+
+
 @router.get("/usuarios", response_model=List[AdminUserRead])
 def listar_usuarios(
     rol: Optional[str] = Query(None, description="Filtrar por rol"),
@@ -56,7 +62,7 @@ def actualizar_usuario(
     for key, value in update_data.items():
         setattr(user, key, value)
     session.add(user)
-    session.flush()
+    session.commit()
     session.refresh(user)
 
     roles_stmt = select(UsuarioRol).where(UsuarioRol.usuario_id == user.id)

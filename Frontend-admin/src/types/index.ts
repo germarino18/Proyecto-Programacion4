@@ -118,6 +118,20 @@ export interface ProductoCreate {
   ingredientes?: ProductoIngredienteInput[];
 }
 
+export interface AdminUser {
+  id: number;
+  email: string;
+  nombre: string;
+  activo: boolean;
+  created_at: string | null;
+  roles: string[];
+}
+
+export interface Rol {
+  codigo: string;
+  descripcion: string;
+}
+
 export interface ProductoUpdate {
   nombre?: string;
   precio_base?: number;

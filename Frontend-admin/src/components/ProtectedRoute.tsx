@@ -18,7 +18,8 @@ export default function ProtectedRoute({ children, roles }: Props) {
   }
 
   if (!usuario) {
-    return <Navigate to="/login" replace />;
+    window.location.href = 'http://localhost:5173/login';
+    return null;
   }
 
   if (roles) {

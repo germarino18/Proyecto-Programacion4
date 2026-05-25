@@ -68,6 +68,15 @@ export default function Navbar() {
           >
             Mis Pedidos
           </Link>
+          {usuario && usuario.roles?.some(r => ['ADMIN', 'STOCK', 'PEDIDOS'].includes(r.rol_codigo)) && (
+            <a
+              href="http://localhost:5173/admin"
+              className="font-body text-body-md text-tertiary hover:text-tertiary-container transition-colors font-semibold flex items-center gap-1"
+            >
+              <span className="material-symbols-outlined text-lg">admin_panel_settings</span>
+              Admin
+            </a>
+          )}
           <Link to="/carrito" className="relative p-1">
             <span className="material-symbols-outlined text-on-surface text-2xl hover:text-primary transition-colors">
               shopping_cart
@@ -157,6 +166,16 @@ export default function Navbar() {
             >
               Mis Pedidos
             </Link>
+            {usuario && usuario.roles?.some(r => ['ADMIN', 'STOCK', 'PEDIDOS'].includes(r.rol_codigo)) && (
+              <a
+                href="http://localhost:5174/admin"
+                onClick={closeMenu}
+                className="flex items-center gap-2 font-body text-body-md text-tertiary hover:text-tertiary-container hover:bg-surface-container-low transition-colors rounded-lg px-3 py-2.5 font-semibold"
+              >
+                <span className="material-symbols-outlined text-lg">admin_panel_settings</span>
+                Panel Admin
+              </a>
+            )}
           </div>
         </div>
       )}

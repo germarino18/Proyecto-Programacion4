@@ -44,7 +44,7 @@ def actualizar_producto(
     id: int,
     data: ProductoUpdate,
     service: ProductoService = Depends(get_service),
-    _=Depends(require_role(["ADMIN"])),
+    _=Depends(require_role(["ADMIN", "STOCK"])),
 ):
     return service.update(id, data)
 

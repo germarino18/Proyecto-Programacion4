@@ -2,10 +2,11 @@ import { NavLink, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const navItems = [
-  { to: '/admin/productos', icon: 'coffee', label: 'Productos' },
-  { to: '/admin/ingredientes', icon: 'liquor', label: 'Ingredientes' },
-  { to: '/admin/categorias', icon: 'category', label: 'Categorías' },
-  { to: '/admin/pedidos', icon: 'orders', label: 'Pedidos' },
+  { to: '/admin/productos', icon: 'coffee', label: 'Productos', roles: ['ADMIN', 'STOCK'] },
+  { to: '/admin/ingredientes', icon: 'liquor', label: 'Ingredientes', roles: ['ADMIN'] },
+  { to: '/admin/categorias', icon: 'category', label: 'Categorías', roles: ['ADMIN'] },
+  { to: '/admin/pedidos', icon: 'orders', label: 'Pedidos', roles: ['ADMIN', 'PEDIDOS'] },
+  { to: '/admin/usuarios', icon: 'group', label: 'Usuarios', roles: ['ADMIN'] },
 ];
 
 const pageTitles: Record<string, string> = {
@@ -13,6 +14,7 @@ const pageTitles: Record<string, string> = {
   '/admin/ingredientes': 'Ingredientes',
   '/admin/categorias': 'Categorías',
   '/admin/pedidos': 'Gestión de Pedidos',
+  '/admin/usuarios': 'Control de Usuarios',
 };
 
 export default function AdminLayout() {
@@ -33,22 +35,24 @@ export default function AdminLayout() {
           <img src="/logo.png" alt="ROST" className="h-14" />
         </div>
         <nav className="flex-1 space-y-0.5 px-3 py-4">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors font-body text-sm ${
-                  isActive
-                    ? 'bg-[#4d6080] text-white font-semibold shadow-sm'
-                    : 'text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface'
-                }`
-              }
-            >
-              <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
-              <span>{item.label}</span>
-            </NavLink>
-          ))}
+          {navItems
+            .filter((item) => item.roles.some((r) => usuario?.roles?.some((ur) => ur.rol_codigo === r)))
+            .map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors font-body text-sm ${
+                    isActive
+                      ? 'bg-[#4d6080] text-white font-semibold shadow-sm'
+                      : 'text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface'
+                  }`
+                }
+              >
+                <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
+                <span>{item.label}</span>
+              </NavLink>
+            ))}
         </nav>
         <div className="border-t border-outline-variant/10 px-4 py-4 space-y-3">
           {usuario && (
@@ -62,6 +66,13 @@ export default function AdminLayout() {
               </div>
             </div>
           )}
+          <a
+            href="http://localhost:5174"
+            className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm text-on-surface-variant hover:bg-surface-container-high hover:text-primary transition-colors font-body"
+          >
+            <span className="material-symbols-outlined text-[18px]">store</span>
+            Ir a la tienda
+          </a>
           <button
             onClick={handleLogout}
             className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm text-on-surface-variant hover:bg-surface-container-high hover:text-error transition-colors font-body"
