@@ -1,3 +1,7 @@
+# main.py - Punto de entrada de la aplicación FastAPI
+# Configura CORS para el frontend (localhost:5173/5174), registra todos los
+# routers bajo /api/v1, y en el startup inicializa la DB y ejecuta el seed.
+
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Session
@@ -36,6 +40,7 @@ app.include_router(formas_pago_router)
 
 @app.on_event("startup")
 def on_startup():
+    """Evento de inicio de FastAPI: crea tablas y ejecuta seed de datos iniciales."""
     init_db()
     session = next(get_session())
     try:
@@ -46,4 +51,5 @@ def on_startup():
 
 @app.get("/")
 def root():
+    """GET / - Endpoint raíz de salud."""
     return {"message": "Catálogo de Productos - API"}

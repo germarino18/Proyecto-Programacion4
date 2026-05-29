@@ -1,8 +1,12 @@
+# models/forma_pago.py - Modelo de la tabla "formas_pago"
+# Catálogo simple de formas de pago (Efectivo, Tarjeta, Transferencia, etc.).
+
 from sqlmodel import SQLModel, Field
 from typing import Optional
 
 
 class FormaPago(SQLModel, table=True):
+    """Catálogo de formas de pago: Efectivo, Tarjeta de crédito, Transferencia, etc."""
     __tablename__ = "formas_pago"
 
     id: Optional[int] = Field(default=None, primary_key=True)

@@ -9,11 +9,20 @@ from app.models.usuario_rol import UsuarioRol
 from app.models.rol import Rol
 from app.schemas.admin import AdminUserRead, AdminUserUpdate, AdminRolAsignar
 
+# routers/admin.py - Endpoints de administración (requieren rol ADMIN)
+# GET  /api/v1/admin/roles → Lista todos los roles del sistema
+# GET  /api/v1/admin/usuarios → Lista usuarios con filtro opcional por rol
+# PATCH /api/v1/admin/usuarios/{id} → Actualiza usuario (nombre, email, activo)
+# POST /api/v1/admin/usuarios/{id}/roles → Asigna un rol a un usuario
+# DELETE /api/v1/admin/usuarios/{id}/roles/{rol_codigo} → Remueve un rol
+
 router = APIRouter(prefix="/api/v1/admin", tags=["Admin"])
 
 
 @router.get("/roles")
 def listar_roles(session: Session = Depends(get_session)):
+    """GET /api/v1/admin/roles - Lista todos los roles del sistema.
+    Requiere: rol ADMIN."""
     roles = session.exec(select(Rol)).all()
     return roles
 
@@ -26,6 +35,9 @@ def listar_usuarios(
     session: Session = Depends(get_session),
     _=Depends(require_admin),
 ):
+    """GET /api/v1/admin/usuarios - Lista usuarios activos (paginado).
+    Requiere: rol ADMIN.
+    Query params: rol (filtrar por código de rol), skip, limit."""
     stmt = select(Usuario).where(Usuario.deleted_at.is_(None)).offset(skip).limit(limit)
     if rol:
         stmt = stmt.join(UsuarioRol).join(Rol).where(Rol.codigo == rol)
@@ -53,6 +65,8 @@ def actualizar_usuario(
     session: Session = Depends(get_session),
     _=Depends(require_admin),
 ):
+    """PATCH /api/v1/admin/usuarios/{id} - Actualiza datos de un usuario.
+    Requiere: rol ADMIN. Campos: nombre, email, activo."""
     user = session.get(Usuario, id)
     if not user or user.deleted_at is not None:
         from fastapi import HTTPException
@@ -84,6 +98,8 @@ def asignar_rol(
     session: Session = Depends(get_session),
     _=Depends(require_admin),
 ):
+    """POST /api/v1/admin/usuarios/{id}/roles - Asigna un rol a un usuario.
+    Requiere: rol ADMIN."""
     user = session.get(Usuario, id)
     if not user or user.deleted_at is not None:
         from fastapi import HTTPException
@@ -114,6 +130,8 @@ def remover_rol(
     session: Session = Depends(get_session),
     _=Depends(require_admin),
 ):
+    """DELETE /api/v1/admin/usuarios/{id}/roles/{rol_codigo} - Remueve un rol.
+    Requiere: rol ADMIN."""
     ur = session.exec(
         select(UsuarioRol).where(
             UsuarioRol.usuario_id == id,

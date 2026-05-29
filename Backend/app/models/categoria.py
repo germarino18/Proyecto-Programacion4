@@ -1,3 +1,7 @@
+# models/categoria.py - Modelo de la tabla "categorias"
+# Categorías jerárquicas (parent_id se referencia a sí misma).
+# Soporta soft delete y se relaciona con productos vía tabla intermedia.
+
 from datetime import datetime
 from sqlmodel import SQLModel, Field, Relationship, Column, DateTime, func
 from typing import TYPE_CHECKING, List, Optional
@@ -7,6 +11,8 @@ if TYPE_CHECKING:
 
 
 class Categoria(SQLModel, table=True):
+    """Tabla categorias: jerarquía auto-referenciada (parent_id → categorias.id).
+    Soft delete. Relación M:N con productos vía tabla intermedia."""
     __tablename__ = "categorias"
 
     id: Optional[int] = Field(default=None, primary_key=True)

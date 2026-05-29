@@ -1,3 +1,8 @@
+# models/unidad_medida.py - Modelo de la tabla "unidades_medida"
+# Catálogo de unidades de medida (kg, g, L, mL, unidades, etc.)
+# con nombre, símbolo y tipo (masa, volumen, unidad, area).
+# Se relaciona con productos (unidad de venta) y productos_ingredientes.
+
 from datetime import datetime
 from sqlmodel import SQLModel, Field, Relationship, Column, DateTime, func
 from decimal import Decimal
@@ -9,6 +14,9 @@ if TYPE_CHECKING:
 
 
 class UnidadMedida(SQLModel, table=True):
+    """Catálogo de unidades de medida (kg, g, L, mL, u, doc, m²).
+    Cada unidad tiene nombre, símbolo único y tipo (masa, volumen, unidad, area).
+    Relaciones: productos (como unidad de venta) y productos_ingredientes."""
     __tablename__ = "unidades_medida"
 
     id: Optional[int] = Field(default=None, primary_key=True)

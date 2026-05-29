@@ -1,3 +1,6 @@
+# models/__init__.py - Exporta todos los modelos SQLModel para que estén disponibles
+# desde app.models. Cada modelo representa una tabla en la base de datos PostgreSQL.
+
 from app.models.unidad_medida import UnidadMedida
 from app.models.categoria import Categoria
 from app.models.producto import Producto

@@ -1,3 +1,7 @@
+# models/usuario_rol.py - Modelo de la tabla "usuarios_roles"
+# Tabla intermedia que relaciona usuarios con roles (relación M:N).
+# PK compuesta: usuario_id + rol_codigo.
+
 from datetime import datetime
 from sqlmodel import SQLModel, Field, Relationship, Column, DateTime, func
 from typing import TYPE_CHECKING, Optional
@@ -8,6 +12,7 @@ if TYPE_CHECKING:
 
 
 class UsuarioRol(SQLModel, table=True):
+    """Tabla intermedia usuarios_roles (M:N). PK compuesta: usuario_id + rol_codigo."""
     __tablename__ = "usuarios_roles"
 
     usuario_id: Optional[int] = Field(

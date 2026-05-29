@@ -1,25 +1,58 @@
+/**
+ * UsuariosPage.tsx — Gestión de usuarios del panel admin
+ *
+ * Funcionalidades:
+ *   - Tabla con listado de usuarios (nombre, email, roles, activo/inactivo)
+ *   - Modal de detalle del usuario con info completa
+ *   - Modal de asignación/remoción de roles
+ *   - Toggle activo/inactivo con confirmación
+ *   - Badges de roles con colores por tipo (ADMIN, STOCK, PEDIDOS, CLIENT)
+ *
+ * Queries:
+ *   - ['admin-usuarios'] → GET /admin/usuarios
+ *   - ['admin-roles'] → GET /admin/roles
+ *
+ * Mutations:
+ *   - asignarRol → POST /admin/usuarios/:userId/roles
+ *   - removerRol → DELETE /admin/usuarios/:userId/roles/:rolCodigo
+ *   - toggleActivo → PATCH /admin/usuarios/:userId { activo }
+ *
+ * Estados:
+ *   - isLoading → "Cargando usuarios..."
+ *   - sin datos → "No hay usuarios registrados."
+ *   - con datos → tabla con filas
+ */
+
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api/client';
 import Modal from '../components/Modal';
 import type { AdminUser, Rol } from '../types';
 
+/**
+ * UsuariosPage — Página de gestión de usuarios
+ *
+ * Administra dos modales: detalle de usuario y edición de roles.
+ */
 export default function UsuariosPage() {
   const queryClient = useQueryClient();
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
   const [roleModalOpen, setRoleModalOpen] = useState(false);
   const [userDetailOpen, setUserDetailOpen] = useState(false);
 
+  /** Query: GET /admin/usuarios — lista todos los usuarios del sistema */
   const { data: usuarios, isLoading } = useQuery<AdminUser[]>({
     queryKey: ['admin-usuarios'],
     queryFn: () => api.get('/admin/usuarios').then((r) => r.data),
   });
 
+  /** Query: GET /admin/roles — lista todos los roles disponibles */
   const { data: rolesDisponibles } = useQuery<Rol[]>({
     queryKey: ['admin-roles'],
     queryFn: () => api.get('/admin/roles').then((r) => r.data),
   });
 
+  /** Mutation: POST /admin/usuarios/:userId/roles — asigna un rol a un usuario */
   const asignarRol = useMutation({
     mutationFn: ({ userId, rolCodigo }: { userId: number; rolCodigo: string }) =>
       api.post(`/admin/usuarios/${userId}/roles`, { rol_codigo: rolCodigo }),
@@ -29,6 +62,7 @@ export default function UsuariosPage() {
     },
   });
 
+  /** Mutation: DELETE /admin/usuarios/:userId/roles/:rolCodigo — remueve un rol */
   const removerRol = useMutation({
     mutationFn: ({ userId, rolCodigo }: { userId: number; rolCodigo: string }) =>
       api.delete(`/admin/usuarios/${userId}/roles/${rolCodigo}`),
@@ -37,6 +71,7 @@ export default function UsuariosPage() {
     },
   });
 
+  /** Mutation: PATCH /admin/usuarios/:userId — activa o desactiva un usuario */
   const toggleActivo = useMutation({
     mutationFn: ({ userId, activo }: { userId: number; activo: boolean }) =>
       api.patch(`/admin/usuarios/${userId}`, { activo }),
@@ -45,11 +80,13 @@ export default function UsuariosPage() {
     },
   });
 
+  /** Abre el modal de edición de roles para un usuario */
   function openRoles(user: AdminUser) {
     setSelectedUser(user);
     setRoleModalOpen(true);
   }
 
+  /** Abre el modal de detalle de un usuario */
   function openDetail(user: AdminUser) {
     setSelectedUser(user);
     setUserDetailOpen(true);

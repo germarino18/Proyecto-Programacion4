@@ -1,3 +1,7 @@
+# core/security.py - Funciones de seguridad
+# Hash de contraseñas con bcrypt, creación y verificación de tokens JWT.
+# El token se genera con el user_id en el payload y expiración configurable.
+
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 import bcrypt
@@ -6,6 +10,10 @@ from app.core.config import SECRET_KEY, JWT_ALGORITHM, JWT_EXPIRATION_MINUTES
 
 
 def hash_password(password: str) -> str:
+    """Hashea una contraseña con bcrypt (salt rounds=12).
+    Recibe: password en texto plano.
+    Retorna: string con el hash."""
+
     pwd_bytes = password.encode("utf-8")
     salt = bcrypt.gensalt(rounds=12)
     hashed = bcrypt.hashpw(pwd_bytes, salt)
@@ -13,6 +21,10 @@ def hash_password(password: str) -> str:
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verifica una contraseña contra su hash.
+    Recibe: password plano y hash.
+    Retorna: True si coincide, False si no."""
+
     return bcrypt.checkpw(
         plain_password.encode("utf-8"),
         hashed_password.encode("utf-8"),
@@ -20,6 +32,10 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
+    """Crea un token JWT firmado.
+    Recibe: data (dict con claims), expires_delta opcional.
+    Retorna: string del token JWT codificado."""
+
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + (
         expires_delta or timedelta(minutes=JWT_EXPIRATION_MINUTES)
@@ -29,6 +45,10 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
 
 
 def decode_access_token(token: str) -> Optional[dict]:
+    """Decodifica y verifica un token JWT.
+    Recibe: token JWT string.
+    Retorna: payload como dict si es válido, None si es inválido/expirado."""
+
     try:
         return jwt.decode(token, SECRET_KEY, algorithms=[JWT_ALGORITHM])
     except jwt.PyJWTError:

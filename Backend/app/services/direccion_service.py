@@ -1,3 +1,8 @@
+# services/direccion_service.py - Servicio de direcciones de entrega
+# NO hereda BaseService. CRUD completo scoped por usuario (cada operación
+# recibe usuario_id para asegurar que solo el dueño accede a sus direcciones).
+# Además: set_principal desmarca la dirección principal anterior y marca la nueva.
+
 from typing import List, Optional
 from fastapi import HTTPException
 from sqlmodel import Session, select
@@ -7,10 +12,16 @@ from app.schemas.direccion import DireccionCreate, DireccionUpdate
 
 
 class DireccionService:
+    """Servicio de direcciones de entrega. NO hereda BaseService.
+    CRUD scoped por usuario: cada operación recibe usuario_id para asegurar
+    que el usuario solo acceda/modifique sus propias direcciones."""
+
     def __init__(self, uow: UnitOfWork):
         self.uow = uow
 
     def get_all(self, usuario_id: int) -> List[DireccionEntrega]:
+        """Lista direcciones activas de un usuario, ordenadas: principal primero,
+        luego por fecha de creación descendente."""
         session: Session = self.uow.session
         stmt = (
             select(DireccionEntrega)
@@ -23,6 +34,8 @@ class DireccionService:
         return list(session.exec(stmt).all())
 
     def get_by_id(self, id: int, usuario_id: int) -> DireccionEntrega:
+        """Obtiene dirección por ID, validando que pertenezca al usuario.
+        Lanza: 404 si no existe o no pertenece al usuario."""
         session: Session = self.uow.session
         direccion = session.exec(
             select(DireccionEntrega).where(
@@ -36,6 +49,7 @@ class DireccionService:
         return direccion
 
     def create(self, data: DireccionCreate, usuario_id: int) -> DireccionEntrega:
+        """Crea una nueva dirección para el usuario."""
         session: Session = self.uow.session
         direccion = DireccionEntrega(**data.model_dump(), usuario_id=usuario_id)
         session.add(direccion)
@@ -45,6 +59,7 @@ class DireccionService:
         return direccion
 
     def update(self, id: int, data: DireccionUpdate, usuario_id: int) -> DireccionEntrega:
+        """Actualiza parcialmente una dirección, validando propiedad del usuario."""
         session: Session = self.uow.session
         direccion = self.get_by_id(id, usuario_id)
         update_data = data.model_dump(exclude_unset=True)
@@ -57,6 +72,7 @@ class DireccionService:
         return direccion
 
     def delete(self, id: int, usuario_id: int) -> None:
+        """Soft delete de dirección, validando propiedad del usuario."""
         session: Session = self.uow.session
         direccion = self.get_by_id(id, usuario_id)
         from datetime import datetime, timezone
@@ -66,6 +82,8 @@ class DireccionService:
         self.uow.commit()
 
     def set_principal(self, id: int, usuario_id: int) -> DireccionEntrega:
+        """Marca una dirección como principal.
+        Desmarca cualquier otra dirección principal del mismo usuario primero."""
         session: Session = self.uow.session
         # Unset all principal for this user
         session.exec(

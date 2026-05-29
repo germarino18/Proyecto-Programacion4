@@ -1,3 +1,23 @@
+/**
+ * App.tsx — Router principal del Frontend Admin de ROST
+ *
+ * Define todas las rutas del panel admin con AuthProvider como wrapper global.
+ * Las rutas hijas de /admin usan ProtectedRoute para verificar autenticación
+ * y roles antes de renderizar cada página.
+ *
+ * Estructura de rutas:
+ *   /login              → LoginPage (sesión cerrada, redirige a store)
+ *   /admin              → AdminLayout con Outlet para sub-rutas
+ *   /admin/productos    → ProductosPage (rol ADMIN o STOCK)
+ *   /admin/productos/:id → ProductoDetallePage
+ *   /admin/ingredientes → IngredientesPage (solo ADMIN)
+ *   /admin/categorias   → CategoriasPage (solo ADMIN)
+ *   /admin/pedidos      → CajeroPedidosPage (rol ADMIN o PEDIDOS, envuelto en ErrorBoundary)
+ *   /admin/usuarios     → UsuariosPage (solo ADMIN)
+ *   /no-autorizado      → Mensaje de "sin autorización"
+ *   *                   → Redirige a /admin
+ */
+
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';

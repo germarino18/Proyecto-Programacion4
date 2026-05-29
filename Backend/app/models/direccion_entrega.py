@@ -1,3 +1,7 @@
+# models/direccion_entrega.py - Modelo de la tabla "direcciones_entrega"
+# Direcciones de entrega asociadas a un usuario. Cada usuario puede tener
+# múltiples direcciones, con una marcada como principal. Soporta soft delete.
+
 from datetime import datetime
 from sqlmodel import SQLModel, Field, Relationship, Column, DateTime, func
 from typing import TYPE_CHECKING, Optional
@@ -7,6 +11,8 @@ if TYPE_CHECKING:
 
 
 class DireccionEntrega(SQLModel, table=True):
+    """Direcciones de entrega por usuario. Cada usuario puede tener varias,
+    con una marcada como principal. Soporta soft delete."""
     __tablename__ = "direcciones_entrega"
 
     id: Optional[int] = Field(default=None, primary_key=True)

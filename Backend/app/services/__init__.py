@@ -1,3 +1,6 @@
+# services/__init__.py - Exporta los servicios del negocio
+# BaseService es el CRUD genérico; los servicios específicos heredan de él.
+
 from app.services.base import BaseService
 from app.services.unidad_medida_service import UnidadMedidaService
 from app.services.categoria_service import CategoriaService

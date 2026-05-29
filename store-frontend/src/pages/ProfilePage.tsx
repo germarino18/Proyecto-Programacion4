@@ -1,3 +1,22 @@
+/**
+ * ProfilePage.tsx — Perfil del usuario autenticado.
+ * Muestra:
+ * - Header con avatar (inicial del nombre), nombre, email, badge "Cuenta activa"
+ * - Sidebar izquierdo con información del usuario (nombre, email, ID)
+ * - Sidebar derecho con gestión embebida de direcciones (listar, crear, eliminar)
+ * - Botón de cerrar sesión (AuthContext.logout)
+ *
+ * Estados:
+ * - LOADING: mientras se verifica la autenticación (authLoading)
+ * - NO AUTENTICADO: mensaje + botón "Iniciar Sesión"
+ * - AUTENTICADO: perfil completo con direcciones
+ *
+ * Queries y Mutations de TanStack Query:
+ * - GET /direcciones → fetch de direcciones
+ * - POST /direcciones → crear nueva dirección
+ * - DELETE /direcciones/:id → eliminar dirección
+ */
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axiosInstance';
@@ -5,22 +24,39 @@ import { useAuth } from '../context/AuthContext';
 import type { DireccionRead, DireccionCreate } from '../types';
 import { useState } from 'react';
 
+/**
+ * ProfilePage — Página de perfil del usuario.
+ * Si no está autenticado, muestra un prompt para iniciar sesión.
+ *
+ * @returns {JSX.Element} Perfil del usuario con datos y direcciones
+ */
 export default function ProfilePage() {
   const { usuario, logout, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  // --- Estado del formulario de nueva dirección (embebido)
   const [showForm, setShowForm] = useState(false);
   const [alias, setAlias] = useState('');
   const [direccion, setDireccion] = useState('');
   const [ciudad, setCiudad] = useState('');
   const [region, setRegion] = useState('');
 
+  /**
+   * Query: GET /direcciones
+   * Obtiene las direcciones del usuario autenticado.
+   * Cacheada con queryKey ["direcciones"].
+   */
   const { data: direcciones } = useQuery<DireccionRead[]>({
     queryKey: ['direcciones'],
     queryFn: () => api.get('/direcciones').then((r) => r.data),
   });
 
+  /**
+   * Mutation: POST /direcciones
+   * Crea una nueva dirección.
+   * On success: refresca lista, cierra formulario, resetea campos.
+   */
   const crearMutation = useMutation({
     mutationFn: (data: DireccionCreate) =>
       api.post('/direcciones', data).then((r) => r.data),
@@ -34,6 +70,11 @@ export default function ProfilePage() {
     },
   });
 
+  /**
+   * Mutation: DELETE /direcciones/:id
+   * Elimina una dirección por ID.
+   * On success: refresca la lista de direcciones.
+   */
   const eliminarMutation = useMutation({
     mutationFn: (id: number) => api.delete(`/direcciones/${id}`),
     onSuccess: () => {
@@ -41,16 +82,25 @@ export default function ProfilePage() {
     },
   });
 
+  /**
+   * handleLogout — Cierra sesión y redirige al home.
+   */
   const handleLogout = async () => {
     await logout();
     navigate('/');
   };
 
+  /**
+   * handleSubmit — Envía el formulario de nueva dirección.
+   *
+   * @param e - Evento del formulario
+   */
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     crearMutation.mutate({ alias, direccion, ciudad, region });
   };
 
+  // --- Estado LOADING: verificando autenticación
   if (authLoading) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -59,6 +109,7 @@ export default function ProfilePage() {
     );
   }
 
+  // --- Estado NO AUTENTICADO: usuario no logueado
   if (!usuario) {
     return (
       <div className="flex flex-col items-center justify-center py-20 gap-4">
@@ -74,11 +125,13 @@ export default function ProfilePage() {
     );
   }
 
+  // --- Estado AUTENTICADO: renderiza el perfil completo
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
-      {/* Profile Header */}
+      {/* Header del perfil: avatar, nombre, email, botón logout */}
       <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 p-8 mb-8">
         <div className="flex items-center gap-6">
+          {/* Avatar con inicial */}
           <div className="w-20 h-20 rounded-full bg-primary-container flex items-center justify-center text-white text-3xl font-bold font-headline">
             {usuario.nombre?.charAt(0).toUpperCase() ?? 'U'}
           </div>
@@ -100,8 +153,9 @@ export default function ProfilePage() {
         </div>
       </div>
 
+      {/* Grid de 2 columnas: info izquierda + direcciones derecha */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left: Quick Info */}
+        {/* Columna izquierda: Información del usuario */}
         <div className="space-y-4">
           <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 p-6">
             <h3 className="font-headline text-headline-sm text-primary mb-4 flex items-center gap-2">
@@ -124,6 +178,7 @@ export default function ProfilePage() {
             </div>
           </div>
 
+          {/* Card decorativa de bienvenida */}
           <div className="bg-primary-container text-on-primary-container rounded-xl shadow-sm p-6">
             <div className="flex items-center gap-3 mb-3">
               <span className="material-symbols-outlined text-[28px]">coffee_maker</span>
@@ -135,7 +190,7 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Right: Addresses */}
+        {/* Columna derecha: Gestión de direcciones embebida */}
         <div className="lg:col-span-2">
           <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 p-6">
             <div className="flex items-center justify-between mb-6">
@@ -152,7 +207,7 @@ export default function ProfilePage() {
               </button>
             </div>
 
-            {/* New Address Form */}
+            {/* Formulario de nueva dirección (toggle) */}
             {showForm && (
               <form onSubmit={handleSubmit} className="bg-surface-container-high rounded-lg p-6 mb-6 space-y-4 border border-outline-variant/10">
                 <div>
@@ -209,9 +264,10 @@ export default function ProfilePage() {
               </form>
             )}
 
-            {/* Address List */}
+            {/* Lista de direcciones */}
             <div className="space-y-3">
               {direcciones && direcciones.length > 0 ? (
+                /* Estado CON DATOS */
                 direcciones.map((d) => (
                   <div
                     key={d.id}
@@ -238,6 +294,7 @@ export default function ProfilePage() {
                   </div>
                 ))
               ) : (
+                /* Estado EMPTY */
                 <div className="text-center py-12">
                   <span className="material-symbols-outlined text-4xl text-on-surface-variant/30 mb-3">map</span>
                   <p className="font-body text-on-surface-variant">No tenés direcciones guardadas</p>

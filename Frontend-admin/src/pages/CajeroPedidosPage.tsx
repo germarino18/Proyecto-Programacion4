@@ -1,3 +1,34 @@
+/**
+ * CajeroPedidosPage.tsx — Gestión de pedidos (máquina de estados)
+ *
+ * Muestra todos los pedidos en una lista con:
+ *   - Estado actual con color e icono
+ *   - Detalles de productos (cantidad, precio, subtotal)
+ *   - Botones para avanzar al siguiente estado según la máquina de estados
+ *   - Historial expandible de cambios de estado
+ *   - Auto-refetch cada 30 segundos
+ *
+ * MÁQUINA DE ESTADOS (TRANSICIONES_VALIDAS):
+ *   PENDIENTE → CONFIRMADO | CANCELADO
+ *   CONFIRMADO → EN_PREP | CANCELADO
+ *   EN_PREP → EN_CAMINO
+ *   EN_CAMINO → ENTREGADO
+ *   ENTREGADO → (terminal)
+ *   CANCELADO → (terminal)
+ *
+ * Query:
+ *   - ['pedidos'] → GET /pedidos (con refetchInterval: 30000ms, retry: 1)
+ *
+ * Mutation:
+ *   - avanzarMutation → PATCH /pedidos/:id/estado { nuevo_estado }
+ *
+ * Estados:
+ *   - isLoading → "Cargando pedidos..."
+ *   - isError → mensaje de error con botón reintentar
+ *   - pedidos vacío → "No hay pedidos aún"
+ *   - con datos → lista de cards de pedidos
+ */
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api/client';
 
@@ -25,6 +56,7 @@ interface Pedido {
   historial: HistorialEstado[];
 }
 
+/** Mapa de transiciones válidas: estado → [estados a los que puede pasar] */
 const TRANSICIONES_VALIDAS: Record<string, string[]> = {
   PENDIENTE: ['CONFIRMADO', 'CANCELADO'],
   CONFIRMADO: ['EN_PREP', 'CANCELADO'],
@@ -34,6 +66,7 @@ const TRANSICIONES_VALIDAS: Record<string, string[]> = {
   CANCELADO: [],
 };
 
+/** Colores de los badges de estado */
 const ESTADOS_COLORS: Record<string, string> = {
   PENDIENTE: 'bg-yellow-100 text-yellow-700',
   CONFIRMADO: 'bg-blue-100 text-blue-700',
@@ -43,6 +76,7 @@ const ESTADOS_COLORS: Record<string, string> = {
   CANCELADO: 'bg-red-100 text-red-700',
 };
 
+/** Iconos de Material Symbols para cada estado */
 const ESTADOS_ICONS: Record<string, string> = {
   PENDIENTE: 'schedule',
   CONFIRMADO: 'check_circle',
@@ -52,9 +86,16 @@ const ESTADOS_ICONS: Record<string, string> = {
   CANCELADO: 'cancel',
 };
 
+/**
+ * CajeroPedidosPage — Página de gestión de pedidos con máquina de estados
+ *
+ * Los pedidos se refrescan automáticamente cada 30 segundos.
+ * Cada pedido muestra los botones de transición disponibles según su estado actual.
+ */
 export default function CajeroPedidosPage() {
   const queryClient = useQueryClient();
 
+  /** Query: GET /pedidos con refetch automático cada 30s y 1 reintento */
   const { data: pedidos, isLoading, isError, error } = useQuery<Pedido[]>({
     queryKey: ['pedidos'],
     queryFn: () => api.get('/pedidos').then((r) => r.data),
@@ -62,6 +103,7 @@ export default function CajeroPedidosPage() {
     retry: 1,
   });
 
+  /** Mutation: PATCH /pedidos/:id/estado — cambia el estado de un pedido */
   const avanzarMutation = useMutation({
     mutationFn: ({
       pedidoId,
@@ -78,12 +120,14 @@ export default function CajeroPedidosPage() {
     },
   });
 
+  /** Estado: cargando lista de pedidos */
   if (isLoading) {
     return (
       <p className="text-on-surface-variant py-8">Cargando pedidos...</p>
     );
   }
 
+  /** Estado: error al obtener pedidos (con botón reintentar) */
   if (isError) {
     return (
       <div className="text-center py-12">
@@ -112,6 +156,7 @@ export default function CajeroPedidosPage() {
         </span>
       </div>
 
+      /** Estado: lista vacía */
       {!pedidos || pedidos.length === 0 ? (
         <div className="bg-surface-container-lowest rounded-xl p-12 text-center">
           <p className="text-on-surface-variant">No hay pedidos aún</p>

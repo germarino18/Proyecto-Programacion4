@@ -7,10 +7,19 @@ from app.core.dependencies import get_current_user, require_role
 from app.schemas.producto import ProductoCreate, ProductoRead, ProductoUpdate
 from app.services.producto_service import ProductoService
 
+# routers/productos.py - Endpoints CRUD de productos
+# GET   /api/v1/productos → Lista productos (público, con filtros: q, categoria_id, disponible)
+# GET   /api/v1/productos/{id} → Obtiene producto por ID (público)
+# POST  /api/v1/productos → Crea producto (requiere ADMIN)
+# PATCH /api/v1/productos/{id} → Actualiza producto (requiere ADMIN o STOCK)
+# DELETE /api/v1/productos/{id} → Soft delete (requiere ADMIN)
+# PATCH /api/v1/productos/{id}/disponibilidad → Cambia disponibilidad (ADMIN o STOCK)
+
 router = APIRouter(prefix="/api/v1/productos", tags=["Productos"])
 
 
 def get_service(session: Session = Depends(get_session)) -> ProductoService:
+    """Inyecta ProductoService con UnitOfWork."""
     uow = UnitOfWork(session)
     return ProductoService(uow)
 
@@ -22,12 +31,14 @@ def listar_productos(
     disponible: Optional[bool] = Query(None, description="Filtrar por disponibilidad"),
     service: ProductoService = Depends(get_service),
 ):
+    """GET /api/v1/productos - Lista productos activos (público).
+    Filtros: q (nombre), categoria_id, disponible."""
     return service.get_all(q=q, categoria_id=categoria_id, disponible=disponible)
 
 
 @router.get("/{id}", response_model=ProductoRead)
 def obtener_producto(id: int, service: ProductoService = Depends(get_service)):
-    return service.get_by_id(id)
+    """GET /api/v1/productos/{id} - Obtiene un producto por ID (público)."""
 
 
 @router.post("", response_model=ProductoRead, status_code=status.HTTP_201_CREATED)
@@ -36,7 +47,8 @@ def crear_producto(
     service: ProductoService = Depends(get_service),
     _=Depends(require_role(["ADMIN"])),
 ):
-    return service.create(data)
+    """POST /api/v1/productos - Crea un nuevo producto.
+    Requiere: rol ADMIN. Acepta categorías e ingredientes en el body."""
 
 
 @router.patch("/{id}", response_model=ProductoRead)
@@ -46,13 +58,15 @@ def actualizar_producto(
     service: ProductoService = Depends(get_service),
     _=Depends(require_role(["ADMIN", "STOCK"])),
 ):
-    return service.update(id, data)
+    """PATCH /api/v1/productos/{id} - Actualiza parcialmente un producto.
+    Requiere: ADMIN o STOCK. Reemplaza relaciones si se envían."""
 
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def eliminar_producto(id: int, service: ProductoService = Depends(get_service),
     _=Depends(require_role(["ADMIN"])),):
-    service.delete(id)
+    """DELETE /api/v1/productos/{id} - Soft delete de producto.
+    Requiere: rol ADMIN."""
 
 
 @router.patch("/{id}/disponibilidad", response_model=ProductoRead)
@@ -62,4 +76,5 @@ def cambiar_disponibilidad(
     service: ProductoService = Depends(get_service),
     _=Depends(require_role(["ADMIN", "STOCK"])),
 ):
-    return service.update(id, ProductoUpdate(disponible=disponible))
+    """PATCH /api/v1/productos/{id}/disponibilidad - Cambia disponibilidad.
+    Requiere: ADMIN o STOCK. Útil para toggle rápido sin enviar todo el producto."""

@@ -1,3 +1,7 @@
+# models/producto_categoria.py - Modelo de la tabla "productos_categorias"
+# Tabla intermedia para la relación M:N entre productos y categorías.
+# PK compuesta: producto_id + categoria_id. Incluye flag es_principal.
+
 from datetime import datetime
 from sqlmodel import SQLModel, Field, Relationship, Column, DateTime, func
 from typing import TYPE_CHECKING, Optional
@@ -8,6 +12,8 @@ if TYPE_CHECKING:
 
 
 class ProductoCategoria(SQLModel, table=True):
+    """Tabla intermedia productos_categorias (M:N entre productos y categorías).
+    PK compuesta: producto_id + categoria_id. Incluye flag es_principal."""
     __tablename__ = "productos_categorias"
 
     producto_id: Optional[int] = Field(

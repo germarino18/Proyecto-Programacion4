@@ -1,3 +1,8 @@
+# core/dependencies.py - Dependencias de FastAPI para autenticación y autorización
+# get_current_user: extrae el usuario desde la cookie "access_token" (JWT)
+# require_role: factory que retorna un dependency checker de roles
+# require_admin: atajo para require_role(["ADMIN"])
+
 from typing import List, Optional
 from fastapi import Depends, HTTPException, Request, status
 from sqlmodel import Session, select
@@ -12,6 +17,10 @@ async def get_current_user(
     request: Request,
     session: Session = Depends(get_session),
 ) -> Usuario:
+    """Extrae el usuario autenticado desde la cookie 'access_token'.
+    Recibe: Request de FastAPI, sesión de DB.
+    Retorna: Usuario si el token es válido y el usuario está activo.
+    Lanza: 401 si no hay token, es inválido, o el usuario está inactivo/eliminado."""
     token = request.cookies.get("access_token")
     if not token:
         raise HTTPException(
@@ -40,6 +49,10 @@ async def get_current_user(
 
 
 def require_role(roles: List[str]):
+    """Factory que retorna un dependency checker de roles.
+    Recibe: lista de códigos de rol permitidos.
+    Retorna: función async que verifica si el usuario tiene alguno de los roles.
+    Lanza: 403 si el usuario no tiene ningún rol requerido."""
     async def role_checker(
         current_user: Usuario = Depends(get_current_user),
         session: Session = Depends(get_session),

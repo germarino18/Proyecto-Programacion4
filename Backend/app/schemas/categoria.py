@@ -1,3 +1,8 @@
+# schemas/categoria.py - Schemas para categorías
+# CategoriaCreate: creación con nombre, descripción, parent_id, imagen
+# CategoriaUpdate: actualización parcial
+# CategoriaRead: respuesta con subcategorías (hijos)
+
 from datetime import datetime
 from typing import Optional, List
 from pydantic import BaseModel, ConfigDict

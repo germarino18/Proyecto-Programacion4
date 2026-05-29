@@ -1,3 +1,18 @@
+/**
+ * Modal.tsx — Modal reutilizable para el panel admin
+ *
+ * Props:
+ *   - isOpen: boolean que controla visibilidad
+ *   - onClose: callback al cerrar (Escape, overlay click, botón X)
+ *   - title: título del modal
+ *   - children: contenido del modal
+ *
+ * Comportamiento:
+ *   - Escucha la tecla Escape para cerrar
+ *   - Clic en el overlay (bg negro semitransparente) cierra el modal
+ *   - No renderiza nada si isOpen es false
+ */
+
 import { useEffect, type ReactNode } from 'react';
 
 interface ModalProps {
@@ -8,6 +23,7 @@ interface ModalProps {
 }
 
 export default function Modal({ isOpen, onClose, title, children }: ModalProps) {
+  /** Efecto: registra listener de teclado para cerrar con Escape */
   useEffect(() => {
     if (!isOpen) return;
     const handler = (e: KeyboardEvent) => {
@@ -17,8 +33,10 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
     return () => document.removeEventListener('keydown', handler);
   }, [isOpen, onClose]);
 
+  /** Estado: cerrado (no renderiza nada) */
   if (!isOpen) return null;
 
+  /** Estado: abierto */
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />

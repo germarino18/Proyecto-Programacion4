@@ -1,3 +1,9 @@
+# db/seed.py - Poblado inicial de la base de datos
+# run_seed() ejecuta todas las funciones _seed_* en orden para crear:
+# roles, formas de pago, estados de pedido, usuario admin por defecto,
+# unidades de medida, categorías, ingredientes y productos de ejemplo.
+# Cada función verifica si ya existen datos para evitar duplicados.
+
 from sqlmodel import Session, select
 from app.core.security import hash_password
 from app.models.unidad_medida import UnidadMedida
@@ -14,6 +20,7 @@ from app.models.estado_pedido import EstadoPedido
 
 
 def _seed_unidades_medida(session: Session):
+    """Crea las unidades de medida base (kg, g, L, mL, pieza, docena, m²)."""
     if session.exec(select(UnidadMedida).limit(1)).first():
         return
     items = [
@@ -30,6 +37,8 @@ def _seed_unidades_medida(session: Session):
 
 
 def _seed_categorias(session: Session):
+    """Crea categorías de ejemplo: Cafés, Bebidas, Pastelería.
+    Reemplaza datos placeholder si existen de seeds anteriores."""
     existing = session.exec(select(Categoria).limit(1)).first()
     if existing:
         # Si ya existen pero son las viejas placeholder, las reemplazamos
@@ -52,6 +61,8 @@ def _seed_categorias(session: Session):
 
 
 def _seed_ingredientes(session: Session):
+    """Crea ingredientes de ejemplo (café, leche, dulce de leche, etc.).
+    Marca Harina y Huevo como alérgenos. Reemplaza datos placeholder."""
     existing = session.exec(select(Ingrediente).limit(1)).first()
     if existing:
         old_ingredients = {"Harina", "Azúcar", "Leche", "Huevo", "Sal", "Mantequilla"}
@@ -76,6 +87,9 @@ def _seed_ingredientes(session: Session):
 
 
 def _seed_productos(session: Session):
+    """Crea productos de ejemplo (Café en granos, Expresso, Ice latte, etc.)
+    junto con sus relaciones de categorías e ingredientes.
+    Reemplaza datos placeholder si existen."""
     # Reemplazar productos placeholder si existen
     existing = session.exec(select(Producto).limit(1)).first()
     if existing:
@@ -193,6 +207,7 @@ def _seed_productos(session: Session):
 
 
 def _seed_roles(session: Session):
+    """Crea los roles del sistema: ADMIN, STOCK, PEDIDOS, CLIENT."""
     if session.exec(select(Rol).limit(1)).first():
         return
     roles_data = [
@@ -207,6 +222,7 @@ def _seed_roles(session: Session):
 
 
 def _seed_formas_pago(session: Session):
+    """Crea las formas de pago: Efectivo, Tarjeta de crédito, Transferencia, Mercado Pago."""
     if session.exec(select(FormaPago).limit(1)).first():
         return
     for nombre in ["Efectivo", "Tarjeta de crédito", "Transferencia", "Mercado Pago"]:
@@ -215,6 +231,7 @@ def _seed_formas_pago(session: Session):
 
 
 def _seed_estados_pedido(session: Session):
+    """Crea los estados de pedido: PENDIENTE, CONFIRMADO, EN_PREP, EN_CAMINO, ENTREGADO, CANCELADO."""
     if session.exec(select(EstadoPedido).limit(1)).first():
         return
     for codigo in ["PENDIENTE", "CONFIRMADO", "EN_PREP", "EN_CAMINO", "ENTREGADO", "CANCELADO"]:
@@ -223,6 +240,8 @@ def _seed_estados_pedido(session: Session):
 
 
 def _seed_admin_user(session: Session):
+    """Crea el usuario admin por defecto (admin@store.com / admin1234)
+    y le asigna el rol ADMIN."""
     if session.exec(select(Usuario).where(Usuario.email == "admin@store.com")).first():
         return
     admin = Usuario(
@@ -237,6 +256,9 @@ def _seed_admin_user(session: Session):
 
 
 def run_seed(session: Session):
+    """Ejecuta todos los seeds en orden de dependencia.
+    Recibe: sesión de SQLModel.
+    Commitea al final si todo sale bien."""
     _seed_roles(session)
     _seed_formas_pago(session)
     _seed_estados_pedido(session)

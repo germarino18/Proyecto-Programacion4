@@ -1,3 +1,8 @@
+# schemas/direccion.py - Schemas para direcciones de entrega
+# DireccionCreate: creación con alias, dirección, ciudad, región
+# DireccionUpdate: actualización parcial
+# DireccionRead: respuesta con datos + flag es_principal
+
 from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, ConfigDict

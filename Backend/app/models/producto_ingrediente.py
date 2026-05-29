@@ -1,3 +1,8 @@
+# models/producto_ingrediente.py - Modelo de la tabla "productos_ingredientes"
+# Tabla intermedia para la relación M:N entre productos e ingredientes.
+# PK compuesta: producto_id + ingrediente_id. Incluye cantidad, unidad de medida
+# y flag es_removible (si el ingrediente puede quitarse del producto).
+
 from datetime import datetime
 from sqlmodel import SQLModel, Field, Relationship, Column, DateTime, func, DECIMAL, CheckConstraint
 from decimal import Decimal
@@ -10,6 +15,9 @@ if TYPE_CHECKING:
 
 
 class ProductoIngrediente(SQLModel, table=True):
+    """Tabla intermedia productos_ingredientes (M:N entre productos e ingredientes).
+    PK compuesta: producto_id + ingrediente_id. Incluye cantidad, unidad_medida_id
+    y flag es_removible para indicar si el ingrediente puede quitarse."""
     __tablename__ = "productos_ingredientes"
 
     producto_id: Optional[int] = Field(

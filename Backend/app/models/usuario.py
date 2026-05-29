@@ -1,3 +1,8 @@
+# models/usuario.py - Modelo de la tabla "usuarios"
+# Representa a los usuarios del sistema. Incluye autenticación (email + password_hash),
+# soft delete (deleted_at), y relaciones con roles (M:N vía usuarios_roles),
+# direcciones de entrega y pedidos.
+
 from datetime import datetime
 from sqlmodel import SQLModel, Field, Relationship, Column, DateTime, func
 from typing import TYPE_CHECKING, List, Optional
@@ -9,6 +14,9 @@ if TYPE_CHECKING:
 
 
 class Usuario(SQLModel, table=True):
+    """Tabla usuarios: almacena cuentas de usuario con email único, nombre,
+    password hasheado, estado activo/inactivo y soft delete (deleted_at).
+    Relaciones: roles (M:N vía UsuarioRol), direcciones de entrega, pedidos."""
     __tablename__ = "usuarios"
 
     id: Optional[int] = Field(default=None, primary_key=True)

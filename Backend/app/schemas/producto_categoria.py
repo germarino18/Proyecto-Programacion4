@@ -1,3 +1,7 @@
+# schemas/producto_categoria.py - Schemas para tablas intermedias
+# ProductoCategoria*: relación producto ↔ categoría
+# ProductoIngrediente*: relación producto ↔ ingrediente (con cantidad y unidad)
+
 from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, ConfigDict

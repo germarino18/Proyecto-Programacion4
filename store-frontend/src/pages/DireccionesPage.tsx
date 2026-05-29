@@ -1,21 +1,52 @@
+/**
+ * DireccionesPage.tsx — Gestión de direcciones de entrega del usuario.
+ * - Lista de direcciones guardadas con icono, alias y dirección
+ * - Formulario para crear nueva dirección (alias, calle, ciudad, región)
+ * - Botón para eliminar dirección (con confirmación directa)
+ * - Estados: loading (no manejado explícitamente), empty (sin direcciones), con datos
+ *
+ * Queries y Mutations de TanStack Query:
+ * - GET /direcciones → fetch de todas las direcciones del usuario
+ * - POST /direcciones → crear nueva dirección
+ * - DELETE /direcciones/:id → eliminar una dirección
+ */
+
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../api/axiosInstance";
 import type { DireccionRead, DireccionCreate } from "../types";
 
+/**
+ * DireccionesPage — Página de administración de direcciones.
+ * Incluye listado, formulario de creación y eliminación.
+ *
+ * @returns {JSX.Element} Gestor de direcciones del usuario
+ */
 export default function DireccionesPage() {
   const queryClient = useQueryClient();
+
+  // --- Estado del formulario de nueva dirección
   const [showForm, setShowForm] = useState(false);
   const [alias, setAlias] = useState("");
   const [direccion, setDireccion] = useState("");
   const [ciudad, setCiudad] = useState("");
   const [region, setRegion] = useState("");
 
+  /**
+   * Query: GET /direcciones
+   * Obtiene todas las direcciones del usuario autenticado.
+   * Cacheada con queryKey ["direcciones"].
+   */
   const { data: direcciones } = useQuery<DireccionRead[]>({
     queryKey: ["direcciones"],
     queryFn: () => api.get("/direcciones").then((r) => r.data),
   });
 
+  /**
+   * Mutation: POST /direcciones
+   * Crea una nueva dirección de entrega.
+   * On success: refresca la lista, cierra el formulario y resetea campos.
+   */
   const crearMutation = useMutation({
     mutationFn: (data: DireccionCreate) =>
       api.post("/direcciones", data).then((r) => r.data),
@@ -29,6 +60,11 @@ export default function DireccionesPage() {
     },
   });
 
+  /**
+   * Mutation: DELETE /direcciones/:id
+   * Elimina una dirección por su ID.
+   * On success: refresca la lista de direcciones.
+   */
   const eliminarMutation = useMutation({
     mutationFn: (id: number) => api.delete(`/direcciones/${id}`),
     onSuccess: () => {
@@ -36,6 +72,11 @@ export default function DireccionesPage() {
     },
   });
 
+  /**
+   * handleSubmit — Envía el formulario de nueva dirección.
+   *
+   * @param e - Evento del formulario
+   */
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     crearMutation.mutate({ alias, direccion, ciudad, region });
@@ -43,6 +84,7 @@ export default function DireccionesPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
+      {/* Header: título + botón nueva dirección */}
       <div className="flex items-center justify-between mb-8">
         <div>
           <h2 className="font-headline text-headline-md text-primary">Mis Direcciones</h2>
@@ -57,6 +99,7 @@ export default function DireccionesPage() {
         </button>
       </div>
 
+      {/* Formulario de nueva dirección (toggle con showForm) */}
       {showForm && (
         <form
           onSubmit={handleSubmit}
@@ -116,8 +159,10 @@ export default function DireccionesPage() {
         </form>
       )}
 
+      {/* Lista de direcciones o mensaje empty */}
       <div className="space-y-3">
         {direcciones && direcciones.length > 0 ? (
+          /* Estado CON DATOS: renderiza cada dirección */
           direcciones.map((d) => (
             <div
               key={d.id}
@@ -142,6 +187,7 @@ export default function DireccionesPage() {
             </div>
           ))
         ) : (
+          /* Estado EMPTY: sin direcciones guardadas */
           <div className="text-center py-16">
             <span className="material-symbols-outlined text-5xl text-on-surface-variant/30 mb-4">map</span>
             <p className="font-body text-body-md text-on-surface-variant">No tenés direcciones guardadas</p>

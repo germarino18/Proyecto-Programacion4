@@ -1,3 +1,8 @@
+# schemas/auth.py - Schemas para autenticación
+# AuthRegister: datos de registro (email, nombre, password)
+# AuthLogin: credenciales de login (email, password)
+# AuthUserRead: respuesta con datos del usuario + roles
+
 from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, ConfigDict, EmailStr

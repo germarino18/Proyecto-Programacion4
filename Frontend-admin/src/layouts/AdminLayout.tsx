@@ -1,6 +1,26 @@
+/**
+ * AdminLayout.tsx — Layout principal del panel de administración
+ *
+ * ESTRUCTURA:
+ *   ┌─────────────────────────────────────────────┐
+ *   │  Sidebar (logo, nav, avatar, cerrar sesión) │  Main (header + Outlet)
+ *   │                                              │
+ *   │  - Logo ROST                                 │  - Título dinámico según ruta
+ *   │  - Nav items filtrados por rol del usuario   │  - <Outlet /> renderiza la página activa
+ *   │  - Avatar + nombre + email                   │
+ *   │  - Link "Ir a la tienda"                     │
+ *   │  - Botón "Cerrar sesión"                     │
+ *   │  - Versión                                   │
+ *   └──────────────────────────────────────────────┘
+ *
+ * Los items de navegación se filtran según los roles del usuario logueado
+ * para que cada uno vea solo los módulos a los que tiene acceso.
+ */
+
 import { NavLink, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+/** Items de navegación del sidebar con los roles que pueden ver cada uno */
 const navItems = [
   { to: '/admin/productos', icon: 'coffee', label: 'Productos', roles: ['ADMIN', 'STOCK'] },
   { to: '/admin/ingredientes', icon: 'liquor', label: 'Ingredientes', roles: ['ADMIN'] },
@@ -9,6 +29,7 @@ const navItems = [
   { to: '/admin/usuarios', icon: 'group', label: 'Usuarios', roles: ['ADMIN'] },
 ];
 
+/** Títulos dinámicos del header según la ruta activa */
 const pageTitles: Record<string, string> = {
   '/admin/productos': 'Productos',
   '/admin/ingredientes': 'Ingredientes',
@@ -17,6 +38,15 @@ const pageTitles: Record<string, string> = {
   '/admin/usuarios': 'Control de Usuarios',
 };
 
+/**
+ * AdminLayout — Componente principal del layout
+ *
+ * Renderiza sidebar fijo a la izquierda y contenido principal a la derecha.
+ * El sidebar incluye navegación filtrada por rol, datos del usuario,
+ * link a la tienda y botón de cerrar sesión.
+ * El contenido principal tiene un header con título dinámico y un Outlet
+ * donde se renderiza la página activa.
+ */
 export default function AdminLayout() {
   const location = useLocation();
   const navigate = useNavigate();

@@ -1,3 +1,8 @@
+# schemas/ingrediente.py - Schemas para ingredientes
+# IngredienteCreate: creación con nombre, descripción, es_alergeno
+# IngredienteUpdate: actualización parcial
+# IngredienteRead: respuesta del ingrediente
+
 from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, ConfigDict

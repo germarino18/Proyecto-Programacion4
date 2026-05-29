@@ -1,3 +1,8 @@
+# schemas/pedido.py - Schemas para pedidos
+# PedidoCreate: creación con items (producto_id + cantidad), dirección y forma de pago
+# PedidoUpdateEstado: cambio de estado (nuevo_estado)
+# PedidoRead: respuesta con detalles, historial, total y estado actual
+
 from datetime import datetime
 from decimal import Decimal
 from typing import Any, Dict, List, Optional

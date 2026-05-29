@@ -1,3 +1,7 @@
+# models/ingrediente.py - Modelo de la tabla "ingredientes"
+# Ingredientes con indicador de alérgeno. Se relaciona con productos
+# vía tabla intermedia productos_ingredientes (M:N).
+
 from datetime import datetime
 from sqlmodel import SQLModel, Field, Relationship, Column, DateTime, func
 from typing import TYPE_CHECKING, List, Optional
@@ -7,6 +11,8 @@ if TYPE_CHECKING:
 
 
 class Ingrediente(SQLModel, table=True):
+    """Tabla ingredientes: nombre único, indicador de alérgeno.
+    Relación M:N con productos vía tabla intermedia productos_ingredientes."""
     __tablename__ = "ingredientes"
 
     id: Optional[int] = Field(default=None, primary_key=True)

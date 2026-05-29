@@ -1,3 +1,8 @@
+# schemas/unidad_medida.py - Schemas para unidades de medida
+# UnidadMedidaCreate: creación con nombre, símbolo, tipo
+# UnidadMedidaUpdate: actualización parcial
+# UnidadMedidaRead: respuesta de la unidad
+
 from datetime import datetime
 from decimal import Decimal
 from typing import Optional

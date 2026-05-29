@@ -1,14 +1,38 @@
+/**
+ * RegisterPage.tsx — Página de registro de nuevo usuario.
+ * - Formulario con nombre, email y contraseña (mín 6 caracteres)
+ * - Mutation POST /auth/register con TanStack Query
+ * - On success: redirige a /login para que el usuario se autentique
+ * - Link a la página de login si ya tiene cuenta
+ *
+ * Estados:
+ * - Normal: formulario listo para completar
+ * - Pending: botón muestra "Registrando..." y se deshabilita
+ * - Error: mensaje "El email podría ya estar en uso"
+ */
+
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axiosInstance";
 
+/**
+ * RegisterPage — Formulario de registro de nuevo usuario.
+ * Pantalla completa centrada sin Navbar/Footer.
+ *
+ * @returns {JSX.Element} Formulario de registro con manejo de estados
+ */
 export default function RegisterPage() {
-  const [nombre, setNombre] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [nombre, setNombre] = useState("");        // Nombre del usuario
+  const [email, setEmail] = useState("");            // Email
+  const [password, setPassword] = useState("");      // Contraseña
   const navigate = useNavigate();
 
+  /**
+   * Mutation: POST /auth/register
+   * Crea un nuevo usuario en el backend.
+   * On success: redirige a /login para que inicie sesión.
+   */
   const registerMutation = useMutation({
     mutationFn: (data: {
       nombre: string;
@@ -23,6 +47,7 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#ffeddb]">
       <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-sm">
+        {/* Logo y título */}
         <div className="text-center mb-8">
           <img src="/logo2.png" alt="ROST" className="h-12 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-[#354867]">Crear cuenta</h2>
@@ -35,6 +60,7 @@ export default function RegisterPage() {
           }}
           className="space-y-4"
         >
+          {/* Campo Nombre */}
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">
               Nombre
@@ -47,6 +73,7 @@ export default function RegisterPage() {
               className="w-full border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-[#c8a97e]"
             />
           </div>
+          {/* Campo Email */}
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">
               Email
@@ -59,6 +86,7 @@ export default function RegisterPage() {
               className="w-full border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-[#c8a97e]"
             />
           </div>
+          {/* Campo Contraseña (mínimo 6 caracteres) */}
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">
               Contraseña
@@ -72,6 +100,7 @@ export default function RegisterPage() {
               className="w-full border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-[#c8a97e]"
             />
           </div>
+          {/* Botón de registro (deshabilitado mientras se procesa) */}
           <button
             type="submit"
             disabled={registerMutation.isPending}
@@ -79,6 +108,7 @@ export default function RegisterPage() {
           >
             {registerMutation.isPending ? "Registrando..." : "Registrarse"}
           </button>
+          {/* Estado ERROR: fallo en el registro */}
           {registerMutation.isError && (
             <p className="text-red-500 text-sm text-center">
               Error al registrarse. El email podría ya estar en uso.
@@ -86,6 +116,7 @@ export default function RegisterPage() {
           )}
         </form>
 
+        {/* Link a login si ya tiene cuenta */}
         <p className="text-center text-sm text-gray-500 mt-6">
           ¿Ya tenés cuenta?{" "}
           <button

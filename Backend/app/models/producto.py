@@ -1,3 +1,8 @@
+# models/producto.py - Modelo de la tabla "productos"
+# Almacena productos del catálogo con nombre, precio, stock, imágenes,
+# disponibilidad y soft delete. Se relaciona con categorías (M:N),
+# ingredientes (M:N) y detalles de pedido.
+
 from datetime import datetime
 from sqlmodel import SQLModel, Field, Relationship, Column, DateTime, func, DECIMAL, Integer, ARRAY, String, CheckConstraint
 from decimal import Decimal
@@ -11,6 +16,9 @@ if TYPE_CHECKING:
 
 
 class Producto(SQLModel, table=True):
+    """Tabla productos: catálogo con nombre, precio, stock, disponibilidad,
+    imágenes (ARRAY de URLs), soft delete. Se relaciona con categorías,
+    ingredientes (M:N) y detalles de pedido."""
     __tablename__ = "productos"
 
     id: Optional[int] = Field(default=None, primary_key=True)

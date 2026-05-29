@@ -1,3 +1,20 @@
+/**
+ * ErrorBoundary.tsx — Boundary de errores para componentes React
+ *
+ * Atrapa errores de renderizado con getDerivedStateFromError.
+ * Muestra un mensaje de error con el detalle y un botón "Reintentar"
+ * que resetea el estado y vuelve a renderizar los hijos.
+ *
+ * Props:
+ *   - children: contenido envuelto
+ *   - fallback: ReactNode opcional para personalizar la UI de error
+ *
+ * Estados:
+ *   - sin error → renderiza children
+ *   - con error y sin fallback → muestra mensaje + botón reintentar
+ *   - con error y con fallback → renderiza fallback
+ */
+
 import { Component, type ReactNode, type ErrorInfo } from 'react';
 
 interface Props {
@@ -25,6 +42,7 @@ export default class ErrorBoundary extends Component<Props, State> {
   }
 
   render() {
+    /** Estado: error capturado */
     if (this.state.hasError) {
       if (this.props.fallback) {
         return this.props.fallback;
@@ -46,6 +64,7 @@ export default class ErrorBoundary extends Component<Props, State> {
         </div>
       );
     }
+    /** Estado: sin errores */
     return this.props.children;
   }
 }

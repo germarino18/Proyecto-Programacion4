@@ -1,3 +1,7 @@
+# services/ingrediente_service.py - Servicio de ingredientes
+# Hereda BaseService. Agrega:
+# - get_all con filtro textual y por tipo de alérgeno
+
 from typing import List, Optional
 from sqlmodel import Session, select
 from app.core.uow import UnitOfWork
@@ -7,6 +11,8 @@ from app.services.base import BaseService
 
 
 class IngredienteService(BaseService[Ingrediente, IngredienteCreate, IngredienteUpdate]):
+    """Servicio de ingredientes. Hereda BaseService con filtro textual y por alérgeno."""
+
     def __init__(self, uow: UnitOfWork):
         super().__init__(uow, Ingrediente)
 

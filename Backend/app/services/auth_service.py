@@ -1,3 +1,7 @@
+# services/auth_service.py - Servicio de autenticación
+# AuthService gestiona registro (con verificación de email único + hash)
+# y login (verifica credenciales, genera JWT, lo setea como cookie httponly).
+
 from fastapi import HTTPException, Response, status
 from sqlmodel import Session, select
 from app.core.uow import UnitOfWork
@@ -9,10 +13,16 @@ from app.schemas.auth import AuthRegister, AuthLogin
 
 
 class AuthService:
+    """Servicio de autenticación: registro y login con JWT."""
+
     def __init__(self, uow: UnitOfWork):
         self.uow = uow
 
     def register(self, data: AuthRegister) -> Usuario:
+        """Registra un nuevo usuario.
+        Recibe: AuthRegister con email, nombre, password.
+        Retorna: Usuario creado (con rol CLIENT asignado automáticamente).
+        Lanza: 409 si el email ya está registrado."""
         session: Session = self.uow.session
         existing = session.exec(
             select(Usuario).where(Usuario.email == data.email)
@@ -42,6 +52,11 @@ class AuthService:
         return user
 
     def login(self, data: AuthLogin, response: Response) -> Usuario:
+        """Autentica un usuario y setea cookie JWT.
+        Recibe: AuthLogin (email, password), Response de FastAPI.
+        Retorna: Usuario autenticado.
+        Lanza: 401 si credenciales inválidas o usuario inactivo/eliminado.
+        Setea: cookie 'access_token' httponly en la response."""
         session: Session = self.uow.session
         user = session.exec(
             select(Usuario).where(Usuario.email == data.email)

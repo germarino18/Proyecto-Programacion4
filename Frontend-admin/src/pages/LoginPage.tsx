@@ -1,3 +1,14 @@
+/**
+ * LoginPage.tsx — Pantalla de "sesión cerrada"
+ *
+ * NO contiene formulario de login. El login se maneja desde la tienda
+ * (localhost:5174) porque la sesión se comparte mediante cookie HttpOnly.
+ * Esta pantalla solo informa que la sesión está cerrada y redirige a la tienda.
+ *
+ * Estados:
+ *   - Sesión cerrada: muestra logo, icono de logout, mensaje y botón "Ir a iniciar sesión"
+ */
+
 export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#FFEDDB]">

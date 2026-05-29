@@ -1,3 +1,8 @@
+# models/detalle_pedido.py - Modelo de la tabla "detalles_pedido"
+# Líneas individuales de un pedido. Guarda un snapshot del precio y nombre
+# del producto al momento de la compra, más personalizaciones en JSON.
+# Esto asegura que el histórico del pedido no cambie aunque el producto se modifique.
+
 from datetime import datetime
 from decimal import Decimal
 from sqlmodel import SQLModel, Field, Relationship, Column, DateTime, func, DECIMAL, JSON
@@ -9,6 +14,9 @@ if TYPE_CHECKING:
 
 
 class DetallePedido(SQLModel, table=True):
+    """Líneas de pedido. Guarda snapshot del precio y nombre del producto
+    al momento de la compra, más personalización en JSON. Esto asegura
+    que el histórico del pedido sea inmutable ante cambios del producto."""
     __tablename__ = "detalles_pedido"
 
     id: Optional[int] = Field(default=None, primary_key=True)

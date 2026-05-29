@@ -1,3 +1,8 @@
+# models/pedido.py - Modelo de la tabla "pedidos"
+# Representa un pedido realizado por un usuario. Contiene FK a usuario,
+# dirección de entrega, forma de pago, y el estado actual del pedido.
+# Se relaciona con detalles (líneas del pedido) e historial de cambios de estado.
+
 from datetime import datetime
 from decimal import Decimal
 from sqlmodel import SQLModel, Field, Relationship, Column, DateTime, func, DECIMAL
@@ -12,6 +17,9 @@ if TYPE_CHECKING:
 
 
 class Pedido(SQLModel, table=True):
+    """Tabla pedidos: cabecera del pedido. FK a usuario, dirección de entrega
+    y forma de pago. Contiene el estado actual y el total calculado.
+    Relaciones: detalles (líneas del pedido), historial (cambios de estado)."""
     __tablename__ = "pedidos"
 
     id: Optional[int] = Field(default=None, primary_key=True)

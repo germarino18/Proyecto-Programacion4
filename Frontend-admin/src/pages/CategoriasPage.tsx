@@ -1,20 +1,52 @@
+/**
+ * CategoriasPage.tsx — CRUD completo de categorías
+ *
+ * Funcionalidades:
+ *   - Tabla con listado de categorías (nombre, descripción, categoría padre)
+ *   - Barra de búsqueda para filtrar por nombre
+ *   - Modal de creación/edición con nombre, descripción y selector de categoría padre
+ *   - Jerarquía: una categoría puede tener una categoría padre
+ *   - El selector de padre evita seleccionarse a sí mismo en edición
+ *
+ * Queries:
+ *   - ['categorias', search] → GET /categorias?q=
+ *
+ * Mutations:
+ *   - createCategoria → POST /categorias
+ *   - updateCategoria → PATCH /categorias/:id
+ *   - deleteCategoria → DELETE /categorias/:id
+ *
+ * Estados:
+ *   - isLoading → "Cargando categorías..."
+ *   - isError → "Error al cargar categorías"
+ *   - sin datos → "No hay categorías registradas."
+ *   - con datos → tabla con filas
+ */
+
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getCategorias, createCategoria, updateCategoria, deleteCategoria } from '../api/categorias';
 import Modal from '../components/Modal';
 import type { CategoriaCreate, CategoriaUpdate } from '../types';
 
+/**
+ * CategoriasPage — Página principal de gestión de categorías
+ *
+ * Controla el estado del modal, la búsqueda y los datos del formulario.
+ */
 export default function CategoriasPage() {
   const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [search, setSearch] = useState('');
 
+  /** Query: lista de categorías filtrada por búsqueda */
   const { data: categorias, isLoading, isError } = useQuery({
     queryKey: ['categorias', search],
     queryFn: () => getCategorias({ q: search || undefined }),
   });
 
+  /** Mutation: POST /categorias — crea nueva categoría */
   const createMutation = useMutation({
     mutationFn: (data: CategoriaCreate) => createCategoria(data),
     onSuccess: () => {
@@ -23,6 +55,7 @@ export default function CategoriasPage() {
     },
   });
 
+  /** Mutation: PATCH /categorias/:id — actualiza categoría existente */
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: CategoriaUpdate }) => updateCategoria(id, data),
     onSuccess: () => {
@@ -31,23 +64,27 @@ export default function CategoriasPage() {
     },
   });
 
+  /** Mutation: DELETE /categorias/:id — elimina categoría */
   const deleteMutation = useMutation({
     mutationFn: (id: number) => deleteCategoria(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['categorias'] }),
   });
 
+  /** Estado del formulario del modal */
   const [form, setForm] = useState<CategoriaCreate>({
     nombre: '',
     descripcion: '',
     parent_id: null,
   });
 
+  /** Abre el modal en modo "crear" reseteando el formulario */
   function openCreate() {
     setEditingId(null);
     setForm({ nombre: '', descripcion: '', parent_id: null });
     setModalOpen(true);
   }
 
+  /** Abre el modal en modo "editar" precargando los datos de la categoría */
   function openEdit(item: NonNullable<typeof categorias>[number]) {
     setEditingId(item.id);
     setForm({
@@ -58,6 +95,7 @@ export default function CategoriasPage() {
     setModalOpen(true);
   }
 
+  /** Maneja el submit: construye payload y crea o actualiza según editingId */
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const payload: CategoriaCreate = {
@@ -72,6 +110,7 @@ export default function CategoriasPage() {
     }
   }
 
+  /** Resuelve el nombre de la categoría padre a partir de su ID */
   function getParentName(parentId: number | null): string {
     if (parentId === null) return '—';
     const parent = categorias?.find((c) => c.id === parentId);

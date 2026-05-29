@@ -1,19 +1,47 @@
+/**
+ * ProductoDetallePage.tsx — Vista detalle de un producto
+ *
+ * Muestra la información completa de un producto incluyendo:
+ *   - Nombre, descripción, precio, stock
+ *   - Badges de disponible/no disponible/sin stock
+ *   - Imagen principal
+ *   - Categorías con badge "Principal"
+ *   - Ingredientes con cantidad, unidad de medida, indicador de alérgeno y removible
+ *
+ * Query:
+ *   - ['producto', id] → GET /productos/:id
+ *
+ * Estados:
+ *   - isLoading → "Cargando producto..."
+ *   - isError o !producto → "Error al cargar el producto"
+ *   - con datos → vista completa con volver atrás
+ */
+
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getProductoById } from '../api/productos';
 
+/**
+ * ProductoDetallePage — Página de detalle de producto
+ *
+ * Lee el id de la URL, lo parsea a entero y ejecuta la query.
+ * La query tiene enabled para no ejecutarse con id inválido.
+ */
 export default function ProductoDetallePage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const productoId = parseInt(id ?? '0', 10);
 
+  /** Query: GET /productos/:id con datos expandidos (categorías, ingredientes) */
   const { data: producto, isLoading, isError } = useQuery({
     queryKey: ['producto', productoId],
     queryFn: () => getProductoById(productoId),
     enabled: !isNaN(productoId) && productoId > 0,
   });
 
+  /** Estado: cargando */
   if (isLoading) return <p className="text-on-surface-variant">Cargando producto...</p>;
+  /** Estado: error o producto no encontrado */
   if (isError || !producto) return <p className="text-error">Error al cargar el producto</p>;
 
   return (

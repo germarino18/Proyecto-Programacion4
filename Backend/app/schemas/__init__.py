@@ -1,3 +1,6 @@
+# schemas/__init__.py - Exporta los schemas Pydantic para validación/serialización
+# Cada grupo tiene Create, Update y Read para operaciones CRUD.
+
 from app.schemas.unidad_medida import UnidadMedidaCreate, UnidadMedidaUpdate, UnidadMedidaRead
 from app.schemas.categoria import CategoriaCreate, CategoriaUpdate, CategoriaRead
 from app.schemas.producto import ProductoCreate, ProductoUpdate, ProductoRead

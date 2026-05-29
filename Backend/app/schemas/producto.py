@@ -1,3 +1,8 @@
+# schemas/producto.py - Schemas para productos
+# ProductoCreate: creación con nombre, precio, stock, categorías e ingredientes
+# ProductoUpdate: actualización parcial (todos los campos opcionales)
+# ProductoRead: respuesta con relaciones precargadas (categorías, ingredientes)
+
 from datetime import datetime
 from typing import Optional, List
 from pydantic import BaseModel, ConfigDict, Field

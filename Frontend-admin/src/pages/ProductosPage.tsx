@@ -1,3 +1,32 @@
+/**
+ * ProductosPage.tsx — CRUD completo de productos
+ *
+ * Funcionalidades:
+ *   - Tabla con listado de productos (nombre, precio, stock, disponible)
+ *   - Barra de búsqueda para filtrar por nombre
+ *   - Modal de creación/edición con campos: nombre, descripción, precio, stock,
+ *     disponible, categorías (checkboxes), ingredientes con cantidad/unidad/removible
+ *   - Solo ADMIN puede crear o eliminar productos (STOCK solo edita)
+ *   - Link a detalle del producto en cada fila
+ *
+ * Queries:
+ *   - ['productos', search] → GET /productos?q=
+ *   - ['categorias'] → GET /categorias
+ *   - ['ingredientes'] → GET /ingredientes
+ *   - ['unidades-medida'] → GET /unidades-medida
+ *
+ * Mutations:
+ *   - createProducto → POST /productos
+ *   - updateProducto → PATCH /productos/:id
+ *   - deleteProducto → DELETE /productos/:id
+ *
+ * Estados por query:
+ *   - isLoading → "Cargando productos..."
+ *   - isError → "Error al cargar productos"
+ *   - productos vacío → "No hay productos registrados."
+ *   - con datos → tabla con filas
+ */
+
 import { useState, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
@@ -9,6 +38,13 @@ import { useAuth } from '../context/AuthContext';
 import Modal from '../components/Modal';
 import type { Producto, ProductoCreate, ProductoUpdate } from '../types';
 
+/**
+ * ProductosPage — Página principal de gestión de productos
+ *
+ * Controla el estado del modal de creación/edición, la búsqueda,
+ * y los datos del formulario incluyendo ingredientes en formato map.
+ * Usa strings para precio/stock para evitar bugs con leading zeros.
+ */
 export default function ProductosPage() {
   const queryClient = useQueryClient();
   const { hasRole } = useAuth();
@@ -27,26 +63,31 @@ export default function ProductosPage() {
   // Ingredient form state: { [ingrediente_id]: { cantidad: string, unidad_medida_id: number, es_removible: boolean } }
   const [ingredientesMap, setIngredientesMap] = useState<Record<number, { cantidad: string; unidad_medida_id: number; es_removible: boolean }>>({});
 
+  /** Query: lista de productos filtrada por búsqueda */
   const { data: productos, isLoading, isError } = useQuery({
     queryKey: ['productos', search],
     queryFn: () => getProductos({ q: search || undefined }),
   });
 
+  /** Query: todas las categorías para el selector del modal */
   const { data: categorias } = useQuery({
     queryKey: ['categorias'],
     queryFn: () => getCategorias(),
   });
 
+  /** Query: todos los ingredientes para el selector del modal */
   const { data: ingredientes } = useQuery({
     queryKey: ['ingredientes'],
     queryFn: () => getIngredientes(),
   });
 
+  /** Query: todas las unidades de medida para el selector del modal */
   const { data: unidadesMedida } = useQuery({
     queryKey: ['unidades-medida'],
     queryFn: () => getUnidadesMedida(),
   });
 
+  /** Mutation: POST /productos — crea nuevo producto */
   const createMutation = useMutation({
     mutationFn: (data: ProductoCreate) => createProducto(data),
     onSuccess: () => {
@@ -55,6 +96,7 @@ export default function ProductosPage() {
     },
   });
 
+  /** Mutation: PATCH /productos/:id — actualiza producto existente */
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: ProductoUpdate }) => updateProducto(id, data),
     onSuccess: () => {
@@ -63,11 +105,13 @@ export default function ProductosPage() {
     },
   });
 
+  /** Mutation: DELETE /productos/:id — elimina producto */
   const deleteMutation = useMutation({
     mutationFn: (id: number) => deleteProducto(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['productos'] }),
   });
 
+  /** Estado del formulario del modal */
   const [form, setForm] = useState<ProductoCreate>({
     nombre: '',
     precio_base: 0,
@@ -78,6 +122,7 @@ export default function ProductosPage() {
     ingredientes: [],
   });
 
+  /** Abre el modal en modo "crear" reseteando todos los campos del formulario */
   function openCreate() {
     setEditingId(null);
     setPrecioStr('0');
@@ -97,6 +142,7 @@ export default function ProductosPage() {
     setModalOpen(true);
   }
 
+  /** Abre el modal en modo "editar" precargando los datos del producto existente */
   function openEdit(p: Producto) {
     if (!p) return;
     setEditingId(p.id);
@@ -130,6 +176,7 @@ export default function ProductosPage() {
     setModalOpen(true);
   }
 
+  /** Maneja el submit del formulario: construye payload y crea o actualiza según editingId */
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     // Construir array de ingredientes desde el map
@@ -155,6 +202,7 @@ export default function ProductosPage() {
     }
   }
 
+  /** Toggle de selección de categoría en el formulario */
   function toggleCategoria(catId: number) {
     const current = form.categorias ?? [];
     if (current.includes(catId)) {
@@ -164,7 +212,7 @@ export default function ProductosPage() {
     }
   }
 
-  // Normalizar precio al perder el foco
+  /** Al perder foco: normaliza el precio a 2 decimales y actualiza el form */
   const normalizePrecio = useCallback(() => {
     const num = parseFloat(precioStr);
     if (!isNaN(num) && num >= 0) {
@@ -174,7 +222,7 @@ export default function ProductosPage() {
     }
   }, [precioStr]);
 
-  // Normalizar stock al perder el foco
+  /** Al perder foco: normaliza el stock a entero y actualiza el form */
   const normalizeStock = useCallback(() => {
     const num = parseInt(stockStr, 10);
     if (!isNaN(num) && num >= 0) {

@@ -1,3 +1,8 @@
+# schemas/admin.py - Schemas para endpoints de administración
+# AdminUserUpdate: campos editables de usuario
+# AdminUserRead: respuesta con datos + roles
+# AdminRolAsignar: body para asignar rol
+
 from datetime import datetime
 from typing import List, Optional
 from pydantic import BaseModel, ConfigDict

@@ -1,9 +1,38 @@
+/**
+ * IngredientesPage.tsx — CRUD completo de ingredientes
+ *
+ * Funcionalidades:
+ *   - Tabla con listado de ingredientes (nombre, descripción, alérgeno)
+ *   - Barra de búsqueda y filtro por tipo (alérgeno / no alérgeno / todos)
+ *   - Modal de creación/edición con nombre, descripción y checkbox alérgeno
+ *   - Botones de editar y eliminar por fila
+ *
+ * Queries:
+ *   - ['ingredientes', search, filterAlergeno] → GET /ingredientes?q=&es_alergeno=
+ *
+ * Mutations:
+ *   - createIngrediente → POST /ingredientes
+ *   - updateIngrediente → PATCH /ingredientes/:id
+ *   - deleteIngrediente → DELETE /ingredientes/:id
+ *
+ * Estados:
+ *   - isLoading → "Cargando ingredientes..."
+ *   - isError → "Error al cargar ingredientes"
+ *   - sin datos → "No hay ingredientes registrados."
+ *   - con datos → tabla con filas
+ */
+
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getIngredientes, createIngrediente, updateIngrediente, deleteIngrediente } from '../api/ingredientes';
 import Modal from '../components/Modal';
 import type { IngredienteCreate, IngredienteUpdate } from '../types';
 
+/**
+ * IngredientesPage — Página principal de gestión de ingredientes
+ *
+ * Controla el estado del modal, la búsqueda y el filtro de alérgeno.
+ */
 export default function IngredientesPage() {
   const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
@@ -11,6 +40,7 @@ export default function IngredientesPage() {
   const [search, setSearch] = useState('');
   const [filterAlergeno, setFilterAlergeno] = useState<string>('');
 
+  /** Query: lista de ingredientes filtrada por búsqueda y tipo alérgeno */
   const { data: ingredientes, isLoading, isError } = useQuery({
     queryKey: ['ingredientes', search, filterAlergeno],
     queryFn: () =>
@@ -20,6 +50,7 @@ export default function IngredientesPage() {
       }),
   });
 
+  /** Mutation: POST /ingredientes — crea nuevo ingrediente */
   const createMutation = useMutation({
     mutationFn: (data: IngredienteCreate) => createIngrediente(data),
     onSuccess: () => {
@@ -28,6 +59,7 @@ export default function IngredientesPage() {
     },
   });
 
+  /** Mutation: PATCH /ingredientes/:id — actualiza ingrediente existente */
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: IngredienteUpdate }) => updateIngrediente(id, data),
     onSuccess: () => {
@@ -36,23 +68,27 @@ export default function IngredientesPage() {
     },
   });
 
+  /** Mutation: DELETE /ingredientes/:id — elimina ingrediente */
   const deleteMutation = useMutation({
     mutationFn: (id: number) => deleteIngrediente(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['ingredientes'] }),
   });
 
+  /** Estado del formulario del modal */
   const [form, setForm] = useState<IngredienteCreate>({
     nombre: '',
     descripcion: '',
     es_alergeno: false,
   });
 
+  /** Abre el modal en modo "crear" reseteando el formulario */
   function openCreate() {
     setEditingId(null);
     setForm({ nombre: '', descripcion: '', es_alergeno: false });
     setModalOpen(true);
   }
 
+  /** Abre el modal en modo "editar" precargando los datos del ingrediente */
   function openEdit(item: NonNullable<typeof ingredientes>[number]) {
     setEditingId(item.id);
     setForm({
@@ -63,6 +99,7 @@ export default function IngredientesPage() {
     setModalOpen(true);
   }
 
+  /** Maneja el submit: construye payload y crea o actualiza según editingId */
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const payload: IngredienteCreate = {

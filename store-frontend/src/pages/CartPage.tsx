@@ -1,3 +1,18 @@
+/**
+ * CartPage.tsx — Página del carrito de compras.
+ * Muestra:
+ * - Lista de CartItem con controles de cantidad y eliminar
+ * - Resumen del pedido: subtotal, envío, IVA, total
+ * - Selector de dirección de entrega (fetch GET /direcciones)
+ * - Selector de forma de pago (fetch GET /formas-pago)
+ * - Botón "Confirmar Pedido" (mutation POST /pedidos)
+ *
+ * Estados:
+ * - Carrito vacío: mensaje + botón "Ir a la tienda"
+ * - Carrito con items: formulario completo + resumen
+ * - Error en mutation: mensaje de error
+ */
+
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -6,26 +21,49 @@ import { useCartStore } from "../store/cartStore";
 import CartItemComponent from "../components/CartItem";
 import type { DireccionRead, FormaPago } from "../types";
 
+/**
+ * CartPage — Página principal del carrito.
+ * Integra el store Zustand (cartStore) con queries de TanStack Query
+ * para direcciones y formas de pago.
+ *
+ * @returns {JSX.Element} Vista del carrito con items y resumen
+ */
 export default function CartPage() {
+  // --- Store del carrito: items, acciones y cálculo de total
   const { items, updateCantidad, removeItem, clearCart, total } =
     useCartStore();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  // --- Estado local del formulario: dirección y forma de pago seleccionadas
   const [direccionId, setDireccionId] = useState<number | "">("");
   const [formaPagoId, setFormaPagoId] = useState<number | "">("");
 
-  // Fetch direcciones del usuario autenticado
+  /**
+   * Query: GET /direcciones
+   * Obtiene las direcciones del usuario autenticado.
+   * Cacheada con queryKey ["direcciones"].
+   */
   const { data: direcciones } = useQuery<DireccionRead[]>({
     queryKey: ["direcciones"],
     queryFn: () => api.get("/direcciones").then((r) => r.data),
   });
 
-  // Fetch formas de pago
+  /**
+   * Query: GET /formas-pago
+   * Obtiene las formas de pago disponibles.
+   * Cacheada con queryKey ["formas-pago"].
+   */
   const { data: formasPago } = useQuery<FormaPago[]>({
     queryKey: ["formas-pago"],
     queryFn: () => api.get("/formas-pago").then((r) => r.data),
   });
 
+  /**
+   * Mutation: POST /pedidos
+   * Crea un nuevo pedido con: dirección, forma de pago e items del carrito.
+   * On success: limpia el carrito, invalida query de pedidos y redirige.
+   */
   const crearPedidoMutation = useMutation({
     mutationFn: (data: {
       direccion_id: number;
@@ -33,12 +71,16 @@ export default function CartPage() {
       items: { producto_id: number; cantidad: number }[];
     }) => api.post("/pedidos", data).then((r) => r.data),
     onSuccess: () => {
-      clearCart();
-      queryClient.invalidateQueries({ queryKey: ["pedidos"] });
-      navigate("/mis-pedidos");
+      clearCart();                                             // Vacía el carrito
+      queryClient.invalidateQueries({ queryKey: ["pedidos"] }); // Refresca pedidos
+      navigate("/mis-pedidos");                                // Redirige a pedidos
     },
   });
 
+  /**
+   * handleConfirmar — Valida y envía el pedido al backend.
+   * Si falta dirección o forma de pago, no hace nada.
+   */
   const handleConfirmar = () => {
     if (!direccionId || !formaPagoId) return;
     crearPedidoMutation.mutate({
@@ -51,6 +93,7 @@ export default function CartPage() {
     });
   };
 
+  // --- Estado EMPTY: carrito sin items
   if (items.length === 0) {
     return (
       <div className="p-6 max-w-3xl mx-auto text-center py-20">
@@ -73,9 +116,10 @@ export default function CartPage() {
     );
   }
 
+  // --- Cálculos del resumen
   const subtotal = total();
-  const envioDisplay = subtotal > 50 ? 0 : 5.99;
-  const impuestoDisplay = subtotal * 0.21;
+  const envioDisplay = subtotal > 50 ? 0 : 5.99;   // Envío gratis > $50
+  const impuestoDisplay = subtotal * 0.21;           // IVA 21%
   const totalConEnvio = subtotal + envioDisplay + impuestoDisplay;
 
   return (
@@ -85,7 +129,7 @@ export default function CartPage() {
       </h2>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
-        {/* Left: Cart Items */}
+        {/* Columna izquierda: Items del carrito */}
         <div className="lg:col-span-2 space-y-6">
           {items.map((item) => (
             <CartItemComponent
@@ -97,25 +141,28 @@ export default function CartPage() {
           ))}
         </div>
 
-        {/* Right: Order Summary */}
+        {/* Columna derecha: Resumen del pedido (sticky) */}
         <div className="lg:col-span-1 sticky top-24">
           <div className="bg-surface-container-high rounded-xl p-8 shadow-sm border border-outline-variant/10">
             <h3 className="font-headline text-headline-sm text-primary font-bold mb-6">
               Resumen del pedido
             </h3>
 
+            {/* Subtotal */}
             <div className="flex justify-between items-center mb-3">
               <span className="font-body text-body-md text-on-surface-variant">Subtotal</span>
               <span className="font-body text-body-md text-on-surface font-semibold">
                 ${subtotal.toFixed(2)}
               </span>
             </div>
+            {/* Envío (Gratis si subtotal > $50) */}
             <div className="flex justify-between items-center mb-3">
               <span className="font-body text-body-md text-on-surface-variant">Envío</span>
               <span className="font-body text-body-md text-on-surface font-semibold">
                 {envioDisplay === 0 ? "Gratis" : `$${envioDisplay.toFixed(2)}`}
               </span>
             </div>
+            {/* IVA 21% */}
             <div className="flex justify-between items-center mb-3">
               <span className="font-body text-body-md text-on-surface-variant">Impuestos (21%)</span>
               <span className="font-body text-body-md text-on-surface font-semibold">
@@ -125,6 +172,7 @@ export default function CartPage() {
 
             <div className="border-t border-outline-variant/20 my-5" />
 
+            {/* Método de entrega */}
             <div className="mb-6">
               <p className="font-body text-label-md text-on-surface-variant mb-3 uppercase tracking-wider">
                 Método de entrega
@@ -141,11 +189,13 @@ export default function CartPage() {
               </div>
             </div>
 
+            {/* Selector de dirección */}
             <div className="mb-4">
               <p className="font-body text-label-md text-on-surface-variant mb-2 uppercase tracking-wider">
                 Dirección de entrega
               </p>
               {direcciones && direcciones.length > 0 ? (
+                /* Estado CON DATOS: dropdown de direcciones */
                 <select
                   value={direccionId}
                   onChange={(e) => setDireccionId(Number(e.target.value))}
@@ -159,6 +209,7 @@ export default function CartPage() {
                   ))}
                 </select>
               ) : (
+                /* Estado EMPTY: sin direcciones guardadas */
                 <p className="font-body text-body-sm text-on-surface-variant">
                   No tenés direcciones guardadas.{" "}
                   <button
@@ -171,6 +222,7 @@ export default function CartPage() {
               )}
             </div>
 
+            {/* Selector de forma de pago */}
             <div className="mb-6">
               <p className="font-body text-label-md text-on-surface-variant mb-2 uppercase tracking-wider">
                 Forma de pago
@@ -191,6 +243,7 @@ export default function CartPage() {
 
             <div className="border-t border-outline-variant/20 my-5" />
 
+            {/* Total final */}
             <div className="flex justify-between items-center mb-6">
               <span className="font-headline text-headline-sm text-on-surface font-bold">Total</span>
               <span className="font-headline text-headline-md text-primary font-bold">
@@ -198,6 +251,7 @@ export default function CartPage() {
               </span>
             </div>
 
+            {/* Botón confirmar pedido */}
             <button
               onClick={handleConfirmar}
               disabled={
@@ -210,6 +264,7 @@ export default function CartPage() {
                 : "Confirmar Pedido"}
             </button>
 
+            {/* Badges de seguridad */}
             <div className="flex items-center justify-center gap-6 pt-6 text-on-surface-variant">
               <div className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-sm">lock</span>
@@ -228,6 +283,7 @@ export default function CartPage() {
         </div>
       </div>
 
+      {/* Estado ERROR en la mutation */}
       {crearPedidoMutation.isError && (
         <p className="font-body text-body-md text-error text-center mt-6">
           Error al crear el pedido. ¿Estás autenticado?

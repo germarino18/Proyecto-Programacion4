@@ -1,3 +1,9 @@
+# services/categoria_service.py - Servicio de categorías
+# Hereda BaseService. Agrega:
+# - get_all con filtro textual y por categoría padre
+# - get_by_id que verifica soft delete
+# - delete: soft delete (deleted_at)
+
 from datetime import datetime, timezone
 from typing import List, Optional
 from sqlmodel import Session, select, or_
@@ -8,10 +14,14 @@ from app.services.base import BaseService
 
 
 class CategoriaService(BaseService[Categoria, CategoriaCreate, CategoriaUpdate]):
+    """Servicio de categorías. Hereda BaseService con filtros y soft delete."""
+
     def __init__(self, uow: UnitOfWork):
         super().__init__(uow, Categoria)
 
     def get_all(self, q: Optional[str] = None, parent_id: Optional[int] = None) -> List[Categoria]:
+        """Lista categorías activas con filtros opcionales.
+        Recibe: q (búsqueda por nombre), parent_id (filtrar por padre)."""
         session: Session = self.uow.session
         stmt = select(Categoria).where(Categoria.deleted_at.is_(None))
         if q:
@@ -22,6 +32,7 @@ class CategoriaService(BaseService[Categoria, CategoriaCreate, CategoriaUpdate])
         return list(result)
 
     def get_by_id(self, id: int) -> Categoria:
+        """Obtiene categoría por ID. Lanza 404 si está eliminada (soft delete)."""
         obj = super().get_by_id(id)
         if obj.deleted_at is not None:
             from fastapi import HTTPException
@@ -42,6 +53,7 @@ class CategoriaService(BaseService[Categoria, CategoriaCreate, CategoriaUpdate])
         return obj
 
     def delete(self, id: int) -> None:
+        """Soft delete: marca deleted_at en lugar de eliminar el registro."""
         session: Session = self.uow.session
         obj = self.get_by_id(id)
         obj.deleted_at = datetime.now(timezone.utc)
