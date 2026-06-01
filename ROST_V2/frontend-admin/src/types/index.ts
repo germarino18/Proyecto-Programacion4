@@ -169,6 +169,7 @@ export interface HistorialEstado {
 export interface Pedido {
   id: number;
   usuario_id: number;
+  usuario_nombre: string;
   estado_actual: string;
   total: number | null;
   created_at: string;

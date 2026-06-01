@@ -6,7 +6,7 @@
 from datetime import datetime
 from decimal import Decimal
 from typing import Any, Dict, List, Optional
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, model_validator
 
 
 class DetallePedidoItem(BaseModel):
@@ -49,6 +49,7 @@ class PedidoRead(BaseModel):
 
     id: int
     usuario_id: int
+    usuario_nombre: str = ""
     direccion_entrega_id: Optional[int] = None
     forma_pago_id: Optional[int] = None
     estado_actual: str
@@ -57,3 +58,24 @@ class PedidoRead(BaseModel):
     updated_at: Optional[datetime] = None
     detalles: List[DetallePedidoRead] = []
     historial: List[HistorialEstadoRead] = []
+
+    @model_validator(mode='before')
+    @classmethod
+    def populate_usuario_nombre(cls, data: Any) -> Any:
+        """Si data es un Pedido (SQLModel), extrae usuario_nombre del relationship."""
+        if hasattr(data, 'usuario') and hasattr(data, 'usuario_id'):
+            _u = getattr(data, 'usuario', None)
+            return {
+                'id': data.id,
+                'usuario_id': data.usuario_id,
+                'usuario_nombre': _u.nombre if _u else "",
+                'direccion_entrega_id': data.direccion_entrega_id,
+                'forma_pago_id': data.forma_pago_id,
+                'estado_actual': data.estado_actual,
+                'total': data.total,
+                'created_at': data.created_at,
+                'updated_at': data.updated_at,
+                'detalles': list(data.detalles or []),
+                'historial': list(data.historial or []),
+            }
+        return data

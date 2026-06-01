@@ -17,6 +17,7 @@ from app.features.producto.models import Producto
 _pedido_loads = (
     selectinload(Pedido.detalles),
     selectinload(Pedido.historial),
+    selectinload(Pedido.usuario),
 )
 
 
