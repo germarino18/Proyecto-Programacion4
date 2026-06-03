@@ -173,6 +173,7 @@ export interface Pedido {
   estado_actual: string;
   total: number | null;
   created_at: string;
+  updated_at?: string | null;
   detalles: DetallePedido[];
   historial: HistorialEstado[];
 }

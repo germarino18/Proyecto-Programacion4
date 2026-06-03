@@ -25,6 +25,7 @@ import IngredientesPage from '../features/ingredientes/pages/IngredientesPage';
 import CategoriasPage from '../features/categorias/pages/CategoriasPage';
 import PedidosKanbanPage from '../features/pedidos/pages/PedidosKanbanPage';
 import UsuariosPage from '../features/usuarios/pages/UsuariosPage';
+import DashboardPage from '../features/estadisticas/pages/DashboardPage';
 import AdminIndexRedirect from './AdminIndexRedirect';
 
 export default function AppRouter() {
@@ -47,13 +48,14 @@ export default function AppRouter() {
 
           {/* Solo ADMIN */}
           <Route element={<ProtectedRoute roles={['ADMIN']} />}>
+            <Route path="dashboard" element={<DashboardPage />} />
             <Route path="categorias" element={<CategoriasPage />} />
             <Route path="ingredientes" element={<IngredientesPage />} />
             <Route path="usuarios" element={<UsuariosPage />} />
           </Route>
 
-          {/* ADMIN y PEDIDOS */}
-          <Route element={<ProtectedRoute roles={['ADMIN', 'PEDIDOS']} />}>
+          {/* ADMIN, PEDIDOS, COCINERO y CAJERO */}
+          <Route element={<ProtectedRoute roles={['ADMIN', 'PEDIDOS', 'COCINERO', 'CAJERO']} />}>
             <Route
               path="pedidos"
               element={
