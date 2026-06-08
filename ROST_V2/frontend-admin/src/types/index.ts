@@ -133,7 +133,7 @@ export interface AdminUser {
   nombre: string;
   activo: boolean;
   created_at: string | null;
-  roles: string[];
+  rol_codigo: string | null;
 }
 
 export interface Rol {

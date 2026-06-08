@@ -85,5 +85,5 @@ export const useAuthStore = create<AuthState>((set, get) => ({
    * @returns true si el usuario tiene ese rol, false si no o si no hay usuario
    */
   hasRole: (rol: string) =>
-    get().usuario?.roles?.some((ur) => ur.rol_codigo === rol) ?? false,
+    get().usuario?.rol?.codigo === rol ?? false,
 }));

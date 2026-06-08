@@ -11,7 +11,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 from sqlmodel import Session, select
 from app.db.database import engine
 from app.features.auth.models import Usuario
-from app.features.usuario.usuario_rol import UsuarioRol
 
 
 def main():
@@ -24,10 +23,7 @@ def main():
         print(f"{'ID':<4} {'Nombre':<20} {'Email':<30} {'Roles'}")
         print("-" * 80)
         for u in users:
-            roles = session.exec(
-                select(UsuarioRol).where(UsuarioRol.usuario_id == u.id)
-            ).all()
-            roles_str = ", ".join([r.rol_codigo for r in roles]) or "(sin roles)"
+            roles_str = u.rol_codigo or "(sin roles)"
             print(f"{u.id:<4} {u.nombre:<20} {u.email:<30} {roles_str}")
 
 

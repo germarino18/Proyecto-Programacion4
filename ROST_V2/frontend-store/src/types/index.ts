@@ -165,12 +165,12 @@ export interface FormaPago {
 
 /**
  * UsuarioAuth — Usuario autenticado devuelto por GET /auth/me.
- * roles: lista de roles del usuario con código y descripción opcional.
+ * rol: rol único del usuario con código y descripción.
  */
 export interface UsuarioAuth {
   id: number;
   email: string;
   nombre: string;
   activo: boolean;
-  roles?: { rol_codigo: string; rol?: { codigo: string; descripcion: string } }[];
+  rol?: { codigo: string; descripcion: string } | null;
 }
