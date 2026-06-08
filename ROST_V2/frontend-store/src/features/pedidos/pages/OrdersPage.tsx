@@ -5,6 +5,7 @@
  * - Detalles de cada pedido (productos, cantidades, precios)
  * - Botón "Cancelar pedido" solo si estado es PENDIENTE o CONFIRMADO
  * - Timeline expandible del historial de estados
+ * - Actualización en tiempo real vía WebSocket
  *
  * Queries y Mutations de TanStack Query:
  * - GET /pedidos → fetch de todos los pedidos del usuario
@@ -16,8 +17,10 @@
  * - CON DATOS: lista de pedidos con estados coloreados
  */
 
+import { useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../../../api/axiosInstance";
+import { useWebSocket } from "../../../hooks/useWebSocket";
 import type { PedidoRead } from "../../../types";
 
 /**
@@ -41,14 +44,39 @@ const ESTADOS_COLORS: Record<string, string> = {
 export default function OrdersPage() {
   const queryClient = useQueryClient();
 
+  // WebSocket para actualizaciones en tiempo real
+  const { isConnected, lastReconnect } = useWebSocket({
+    onOrderUpdated: (pedido) => {
+      queryClient.setQueryData<PedidoRead[]>(["pedidos"], (old) => {
+        if (!old) return [pedido];
+        const idx = old.findIndex((p) => p.id === pedido.id);
+        if (idx >= 0) {
+          const updated = [...old];
+          updated[idx] = { ...updated[idx], ...pedido };
+          return updated;
+        }
+        return [pedido, ...old];
+      });
+    },
+  });
+
+  // Refetchear al reconectar (por si se perdieron eventos)
+  useEffect(() => {
+    if (lastReconnect) {
+      queryClient.invalidateQueries({ queryKey: ["pedidos"] });
+    }
+  }, [lastReconnect, queryClient]);
+
   /**
    * Query: GET /pedidos
    * Obtiene todos los pedidos del usuario autenticado.
    * Cacheada con queryKey ["pedidos"].
+   * Cuando el WebSocket está conectado, desactiva el polling.
    */
   const { data: pedidos, isLoading } = useQuery<PedidoRead[]>({
     queryKey: ["pedidos"],
     queryFn: () => api.get("/pedidos").then((r) => r.data),
+    refetchInterval: isConnected ? false : 15000,
   });
 
   /**
@@ -85,7 +113,20 @@ export default function OrdersPage() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h2 className="text-2xl font-bold text-[#354867] mb-6">Mis Pedidos</h2>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold text-[#354867]">Mis Pedidos</h2>
+        <div className="flex items-center gap-2">
+          <span
+            className={`inline-block w-2 h-2 rounded-full ${
+              isConnected ? "bg-green-500" : "bg-yellow-500"
+            }`}
+            title={isConnected ? "Tiempo real" : "Reconectando..."}
+          />
+          <span className="text-xs text-gray-400">
+            {isConnected ? "Tiempo real" : "Reconectando..."}
+          </span>
+        </div>
+      </div>
 
       {!pedidos || pedidos.length === 0 ? (
         // --- Estado EMPTY: sin pedidos
