@@ -16,14 +16,14 @@ import { getProductos, createProducto, updateProducto, deleteProducto } from '..
 import { getCategorias } from '../../../api/categorias';
 import { getIngredientes } from '../../../api/ingredientes';
 import { getUnidadesMedida } from '../../../api/unidadesMedida';
-import { useAuth } from '../../auth/context/AuthContext';
+import { useAuthStore } from '../../auth/store/authStore';
 import Modal from '../../../components/Modal';
 import ProductoForm from '../components/ProductoForm';
 import type { Producto, ProductoCreate, ProductoUpdate } from '../../../types';
 
 export default function ProductosPage() {
   const queryClient = useQueryClient();
-  const { hasRole } = useAuth();
+  const hasRole = useAuthStore((s) => s.hasRole);
   const isAdmin = hasRole('ADMIN');
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);

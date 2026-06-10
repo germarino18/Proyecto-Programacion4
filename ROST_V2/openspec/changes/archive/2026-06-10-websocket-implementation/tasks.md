@@ -34,5 +34,5 @@
 ## 7. Verificación
 
 - [x] 7.1 Iniciar backend y verificar que el endpoint WebSocket acepta conexiones con cookie válida
-- [ ] 7.2 Iniciar frontend-admin, conectar WebSocket, y verificar que los cambios de estado se reflejan en tiempo real
-- [ ] 7.3 Probar reconexión: matar el backend, esperar, reiniciarlo, verificar que el frontend reconecta y sincroniza
+- [x] 7.2 Iniciar frontend-admin, conectar WebSocket, y verificar que los cambios de estado se reflejan en tiempo real
+- [x] 7.3 Probar reconexión: matar el backend, esperar, reiniciarlo, verificar que el frontend reconecta y sincroniza

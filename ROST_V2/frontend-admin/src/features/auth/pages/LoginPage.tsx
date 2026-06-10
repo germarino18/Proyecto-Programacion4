@@ -1,7 +1,7 @@
 /**
  * LoginPage.tsx — Página de inicio de sesión del panel admin.
  * - Formulario con email + contraseña
- * - Llama a AuthContext.login() que hace POST /auth/login + GET /auth/me
+ * - Llama a useAuthStore.login() que hace POST /auth/login + GET /auth/me
  * - Muestra error si las credenciales son incorrectas
  * - Redirige al dashboard /admin al iniciar sesión correctamente
  *
@@ -12,13 +12,13 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuthStore } from '../store/authStore';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { login } = useAuth();
+  const login = useAuthStore((s) => s.login);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {

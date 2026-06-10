@@ -17,7 +17,7 @@
  * - CON DATOS: lista de pedidos con estados coloreados
  */
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../../../api/axiosInstance";
 import { useWebSocket } from "../../../hooks/useWebSocket";
@@ -43,6 +43,7 @@ const ESTADOS_COLORS: Record<string, string> = {
  */
 export default function OrdersPage() {
   const queryClient = useQueryClient();
+  const [cancelandoId, setCancelandoId] = useState<number | null>(null);
 
   // WebSocket para actualizaciones en tiempo real
   const { isConnected, lastReconnect } = useWebSocket({
@@ -89,8 +90,18 @@ export default function OrdersPage() {
       api.patch(`/pedidos/${pedidoId}/cancelar`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pedidos"] });
+      setCancelandoId(null);
+    },
+    onError: () => {
+      setCancelandoId(null);
     },
   });
+
+  const confirmarCancelar = () => {
+    if (cancelandoId !== null) {
+      cancelarMutation.mutate(cancelandoId);
+    }
+  };
 
   // --- Estado LOADING
   if (isLoading) {
@@ -191,7 +202,7 @@ export default function OrdersPage() {
                 </span>
                 {puedeCancelar(pedido.estado_actual) && (
                   <button
-                    onClick={() => cancelarMutation.mutate(pedido.id)}
+                    onClick={() => setCancelandoId(pedido.id)}
                     disabled={cancelarMutation.isPending}
                     className="text-sm text-red-500 hover:text-red-700 font-medium"
                   >
@@ -221,6 +232,34 @@ export default function OrdersPage() {
               )}
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Modal de confirmación para cancelar pedido (mismo patrón que admin) */}
+      {cancelandoId !== null && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setCancelandoId(null)} />
+          <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-sm mx-4 p-6">
+            <h3 className="font-bold text-[#354867] text-lg mb-2">Cancelar pedido</h3>
+            <p className="text-sm text-gray-500 mb-6">
+              ¿Estás seguro de cancelar el pedido #{cancelandoId}? Esta acción no se puede deshacer.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setCancelandoId(null)}
+                className="px-4 py-2.5 rounded-lg border border-gray-300 text-gray-600 text-sm font-semibold hover:bg-gray-50 transition-colors"
+              >
+                Volver
+              </button>
+              <button
+                onClick={confirmarCancelar}
+                disabled={cancelarMutation.isPending}
+                className="px-4 py-2.5 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 transition-colors disabled:opacity-50"
+              >
+                {cancelarMutation.isPending ? "Cancelando..." : "Sí, cancelar"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
