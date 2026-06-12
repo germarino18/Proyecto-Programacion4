@@ -20,6 +20,7 @@ import api from "../../../api/axiosInstance";
 import { useCartStore } from "../store/cartStore";
 import CartItemComponent from "../../../components/CartItem";
 import type { DireccionRead, FormaPago } from "../../../types";
+import { crearPreference } from "../../../api/pagos";
 
 /**
  * CartPage — Página principal del carrito.
@@ -62,7 +63,9 @@ export default function CartPage() {
   /**
    * Mutation: POST /pedidos
    * Crea un nuevo pedido con: dirección, forma de pago e items del carrito.
-   * On success: limpia el carrito, invalida query de pedidos y redirige.
+   * On success:
+   * - Si la forma de pago es MercadoPago → crea preferencia y redirige al checkout
+   * - Si no → limpia carrito y redirige a /mis-pedidos
    */
   const crearPedidoMutation = useMutation({
     mutationFn: (data: {
@@ -70,10 +73,42 @@ export default function CartPage() {
       forma_pago_id: number;
       items: { producto_id: number; cantidad: number }[];
     }) => api.post("/pedidos", data).then((r) => r.data),
-    onSuccess: () => {
-      clearCart();                                             // Vacía el carrito
-      queryClient.invalidateQueries({ queryKey: ["pedidos"] }); // Refresca pedidos
-      navigate("/mis-pedidos");                                // Redirige a pedidos
+    onSuccess: (pedido, variables) => {
+      const fp = formasPago?.find((f) => f.id === variables.forma_pago_id);
+      const esMercadoPago =
+        fp?.nombre.toUpperCase() === "MERCADOPAGO" ||
+        fp?.nombre.toLowerCase().includes("mercado");
+
+      if (esMercadoPago) {
+        // Paso 2: crear preferencia en MP y redirigir al checkout
+        crearPreferenceMutation.mutate(pedido.id);
+      } else {
+        // Flujo normal: efectivo, transferencia, etc.
+        clearCart();
+        queryClient.invalidateQueries({ queryKey: ["pedidos"] });
+        navigate("/mis-pedidos");
+      }
+    },
+  });
+
+  /**
+   * Mutation: POST /pagos/crear
+   * Crea una preferencia de pago en MercadoPago y redirige al checkout.
+   * Se ejecuta DESPUÉS de crear el pedido si la forma de pago es MP.
+   * Si falla, igual limpia el carrito y lleva a /mis-pedidos (el pedido ya se creó).
+   */
+  const crearPreferenceMutation = useMutation({
+    mutationFn: (pedido_id: number) => crearPreference(pedido_id),
+    onSuccess: (data) => {
+      // Redirigir al checkout de MercadoPago
+      window.location.href = data.init_point;
+    },
+    onError: (error: Error) => {
+      // El pedido ya se creó, pero no se pudo generar el pago.
+      // Limpiamos el carrito y redirigimos para que el usuario vea su pedido.
+      clearCart();
+      queryClient.invalidateQueries({ queryKey: ["pedidos"] });
+      navigate("/mis-pedidos");
     },
   });
 
@@ -81,6 +116,8 @@ export default function CartPage() {
    * handleConfirmar — Valida y envía el pedido al backend.
    * Si falta dirección o forma de pago, no hace nada.
    */
+  const isPending = crearPedidoMutation.isPending || crearPreferenceMutation.isPending;
+
   const handleConfirmar = () => {
     if (!direccionId || !formaPagoId) return;
     crearPedidoMutation.mutate({
@@ -254,14 +291,14 @@ export default function CartPage() {
             {/* Botón confirmar pedido */}
             <button
               onClick={handleConfirmar}
-              disabled={
-                !direccionId || !formaPagoId || crearPedidoMutation.isPending
-              }
+              disabled={!direccionId || !formaPagoId || isPending}
               className="w-full bg-primary-container text-on-primary py-4 rounded-lg font-body text-body-md font-bold hover:brightness-110 transition-all disabled:bg-outline-variant disabled:cursor-not-allowed shadow-sm"
             >
-              {crearPedidoMutation.isPending
-                ? "Creando pedido..."
-                : "Confirmar Pedido"}
+              {crearPreferenceMutation.isPending
+                ? "Redirigiendo a MercadoPago..."
+                : crearPedidoMutation.isPending
+                  ? "Creando pedido..."
+                  : "Confirmar Pedido"}
             </button>
 
             {/* Badges de seguridad */}
@@ -287,6 +324,12 @@ export default function CartPage() {
       {crearPedidoMutation.isError && (
         <p className="font-body text-body-md text-error text-center mt-6">
           Error al crear el pedido. ¿Estás autenticado?
+        </p>
+      )}
+      {crearPreferenceMutation.isError && (
+        <p className="font-body text-body-md text-error text-center mt-6">
+          Error al procesar el pago. El pedido se creó, pero no se pudo generar el pago con MercadoPago.
+          Revisá las credenciales de MercadoPago o intentá con otra forma de pago.
         </p>
       )}
     </div>

@@ -164,6 +164,21 @@ export interface FormaPago {
 }
 
 /**
+ * PagoRead — Pago devuelto por la API de pagos.
+ * Asociado a un pedido, refleja el estado del pago en MercadoPago.
+ */
+export interface PagoRead {
+  id: number;
+  pedido_id: number;
+  mp_preference_id: string | null;
+  mp_status: string;
+  mp_status_detail: string | null;
+  transaction_amount: number | null;
+  external_reference: string;
+  created_at: string;
+}
+
+/**
  * UsuarioAuth — Usuario autenticado devuelto por GET /auth/me.
  * rol: rol único del usuario con código y descripción.
  */

@@ -35,6 +35,8 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
   optionsRef.current = options;
 
   const connect = useCallback(() => {
+    // Store: WS via Vite proxy (mismo origen). Si se accede por ngrok el WS puede
+    // fallar (ngrok free es inestable con WS), pero el hook cae a polling automático.
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const wsUrl = `${protocol}//${window.location.host}/api/v1/pedidos/ws`;
 

@@ -16,6 +16,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import HomePage from "../features/home/pages/HomePage";
 import CartPage from "../features/carrito/pages/CartPage";
 import OrdersPage from "../features/pedidos/pages/OrdersPage";
+import SuccessPage from "../features/pagos/pages/SuccessPage";
 import LoginPage from "../features/auth/pages/LoginPage";
 import RegisterPage from "../features/auth/pages/RegisterPage";
 import DireccionesPage from "../features/direccion/pages/DireccionesPage";
@@ -38,6 +39,9 @@ export default function AppRouter() {
       <Route element={<StoreLayout />}>
         {/* Home: pública */}
         <Route path="/" element={<HomePage />} />
+
+        {/* Pago exitoso: pública (MP redirige aquí, el back verifica el estado real) */}
+        <Route path="/pago-exitoso" element={<SuccessPage />} />
 
         {/* Rutas protegidas (requieren autenticación) */}
         <Route element={<ProtectedRoute />}>

@@ -18,10 +18,11 @@
  */
 
 import { useEffect, useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import api from "../../../api/axiosInstance";
 import { useWebSocket } from "../../../hooks/useWebSocket";
-import type { PedidoRead } from "../../../types";
+import { getPago, crearPreference } from "../../../api/pagos";
+import type { PedidoRead, PagoRead } from "../../../types";
 
 /**
  * Mapa de colores para los badges de estado del pedido.
@@ -97,11 +98,64 @@ export default function OrdersPage() {
     },
   });
 
+  /**
+   * Queries: GET /pagos/{pedido_id} por cada pedido con forma de pago.
+   * Obtiene el estado del pago para pedidos que usan MercadoPago.
+   * Se agrupan en un Map<pedido_id, PagoRead | null> para acceso fácil.
+   */
+  const pedidosConFormaPago = (pedidos || []).filter(
+    (p) => p.forma_pago_id !== null
+  );
+
+  const pagoQueries = useQueries({
+    queries: pedidosConFormaPago.map((p) => ({
+      queryKey: ["pago", p.id],
+      queryFn: () => getPago(p.id).catch(() => null),
+      enabled: true,
+      retry: false,
+      staleTime: 30_000,
+    })),
+  });
+
+  const pagosMap = new Map<number, PagoRead | null>();
+  pedidosConFormaPago.forEach((p, idx) => {
+    if (pagoQueries[idx]?.data !== undefined) {
+      pagosMap.set(p.id, pagoQueries[idx].data ?? null);
+    }
+  });
+
+  // Estado del badge según mp_status
+  const PAGO_STATUS_COLORS: Record<string, string> = {
+    pending: "bg-yellow-100 text-yellow-700",
+    approved: "bg-green-100 text-green-700",
+    rejected: "bg-red-100 text-red-700",
+    in_process: "bg-blue-100 text-blue-700",
+  };
+
+  const PAGO_STATUS_LABELS: Record<string, string> = {
+    pending: "Pago pendiente",
+    approved: "Pago aprobado",
+    rejected: "Pago rechazado",
+    in_process: "Pago en proceso",
+    cancelled: "Pago cancelado",
+  };
+
   const confirmarCancelar = () => {
     if (cancelandoId !== null) {
       cancelarMutation.mutate(cancelandoId);
     }
   };
+
+  /**
+   * Mutation: POST /pagos/crear (reintento)
+   * Genera una nueva preferencia de pago y redirige al checkout de MP.
+   */
+  const retryPagoMutation = useMutation({
+    mutationFn: (pedidoId: number) => crearPreference(pedidoId),
+    onSuccess: (data) => {
+      window.location.href = data.init_point;
+    },
+  });
 
   // --- Estado LOADING
   if (isLoading) {
@@ -229,6 +283,34 @@ export default function OrdersPage() {
                     ))}
                   </div>
                 </details>
+              )}
+
+              {/* Estado del pago (solo si hay información de pago) */}
+              {pedido.forma_pago_id && pagosMap.has(pedido.id) && pagosMap.get(pedido.id) && (
+                <div className="mt-3 pt-3 border-t border-gray-100">
+                  <div className="flex items-center justify-between">
+                    <span
+                      className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+                        PAGO_STATUS_COLORS[pagosMap.get(pedido.id)!.mp_status] ||
+                        "bg-gray-100 text-gray-600"
+                      }`}
+                    >
+                      {PAGO_STATUS_LABELS[pagosMap.get(pedido.id)!.mp_status] ||
+                        pagosMap.get(pedido.id)!.mp_status}
+                    </span>
+                    {pagosMap.get(pedido.id)!.mp_status === "pending" && (
+                      <button
+                        onClick={() => retryPagoMutation.mutate(pedido.id)}
+                        disabled={retryPagoMutation.isPending}
+                        className="text-xs text-blue-600 hover:text-blue-800 font-medium disabled:opacity-50"
+                      >
+                        {retryPagoMutation.isPending
+                          ? "Redirigiendo..."
+                          : "Reintentar pago"}
+                      </button>
+                    )}
+                  </div>
+                </div>
               )}
             </div>
           ))}
